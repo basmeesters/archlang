@@ -16,11 +16,14 @@ class ArchitectureGraph {
 
     private exampleGraph() {
         for (let i of [0,1,2,3]) {
-            this.addNode(`n${i}`, {label: `Node ${i}`});
+            this.addNode(`n${i}`, {
+                label: `<b>Node ${i}</b></br> Does this work?`,
+                labelType: "html"
+            });
         }
-        this.addEdge("e1", "n0", "n1", {label: ""})
-        this.addEdge("e1", "n1", "n2", {label: ""})
-        this.addEdge("e1", "n3", "n2", {label: ""})
+        this.addEdge("e1", "n0", "n1", {label: "", lineInterpolate: 'basis' })
+        this.addEdge("e1", "n1", "n2", {label: "", lineInterpolate: 'basis' })
+        this.addEdge("e1", "n3", "n2", {label: "", lineInterpolate: 'basis' })
     }
 
     private color() {
@@ -31,11 +34,11 @@ class ArchitectureGraph {
             state.rx = 1
             state.ry = 1
             state.style = "fill: rgb(200, 200, 200);"
-            state.shape = "ellipse"
+            // state.shape = "ellipse"
         }
     }
 
-    public addNode(id: string, value: { label: string }) {
+    public addNode(id: string, value: { label: string, labelType: string }) {
         this.graph.setNode(id, value);
     }
 

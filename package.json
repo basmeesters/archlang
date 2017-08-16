@@ -1,7 +1,7 @@
 {
   "name": "archlang",
   "version": "1.0.0",
-  "description": "Archlang ========",
+  "description": "Archlang",
   "main": "index.js",
   "scripts": {
       "clean": "rimraf dist",

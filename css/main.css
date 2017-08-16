@@ -1,18 +1,26 @@
-/* Cluster fill*/
-.clusters rect {
-    fill: #efefef;
+g.type-TK > rect {
+  fill: #00ffd0;
 }
 
-/* State borders*/
+div {
+    text-align: center
+}
+
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
 .node rect {
-    stroke-width: 1.2px;
-    stroke: #000;
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
 }
 
-/* Transition paths*/
 .edgePath path {
-    stroke: #999;
-    fill: none;
+  stroke: #333;
+  stroke-width: 1.5px;
 }
 
 /* State and transition text*/

@@ -1,3 +1,4 @@
-function clickMe() {
-    alert("TEST!?")
+function start() {
+    console.log("loaded")
+    new ArchitectureGraph();
 }

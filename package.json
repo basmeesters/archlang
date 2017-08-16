@@ -1,0 +1,35 @@
+{
+  "name": "archlang",
+  "version": "1.0.0",
+  "description": "Archlang ========",
+  "main": "index.js",
+  "scripts": {
+      "clean": "rimraf dist",
+      "start": "npm-run-all clean --parallel watch:build watch:server --print-label",
+      "watch:build": "tsc --watch",
+      "watch:server": "nodemon './dist/index.js' --watch './dist'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/basmeesters/archlutang.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/basmeesters/archlang/issues"
+  },
+  "homepage": "https://github.com/basmeesters/archlang#readme",
+  "devDependencies": {
+    "@types/node": "^8.0.22",
+    "nodemon": "^1.11.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
+  },
+  "dependencies": {
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2",
+    "rimraf": "^2.6.1",
+    "typescript": "^2.4.2"
+  }
+}

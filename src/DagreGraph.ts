@@ -1,5 +1,6 @@
 class DagreGraph {
     public graph: any;
+    private MAX_LENGHT = 35;
 
     constructor(jsonGraph: JsonGraph) {
         this.graph = new dagreD3.graphlib.Graph({
@@ -12,24 +13,26 @@ class DagreGraph {
 
     public createGraphFromJson(jsonGraph: JsonGraph) {
         for (let node of jsonGraph.nodes) {
-            this.addNode(node.id, node.title, node.description, node.style);
+            this.addNode(node.id, node.title, node.description, node.style,
+                node.shape);
         }
 
         for (let edge of jsonGraph.edges) {
-            this.addEdge(edge.id, edge.source, edge.target, edge.description);
+            this.addEdge(edge.id, edge.source, edge.target, edge.description,
+                edge.style, edge.arrowHeadStyle);
         }
     }
 
     private render() {
         let render = new dagreD3.render();
         let svg = d3.select('#graph');
-        svg.attr('width', window.innerWidth * 0.80);
-        svg.attr('height', window.innerHeight * 0.80);
+        svg.attr('width', window.innerWidth * 1);
+        svg.attr('height', window.innerHeight * 1);
         render(svg, this.graph);
         this.setZoomBehavior(svg, this.graph.graph())
     }
 
-    private setZoomBehavior(svg, renderedGraph) {
+    private setZoomBehavior(svg: any, renderedGraph: any) {
         let zoom = d3.behavior.zoom();
         zoom.on("zoom", () => this.zoomBehavior(svg));
         svg.call(zoom);
@@ -37,13 +40,13 @@ class DagreGraph {
         this.scaleVisualization(svg, zoom, renderedGraph);
     }
 
-    private zoomBehavior(svg) {
+    private zoomBehavior(svg: any) {
         svg.select('g').attr("transform",
             `translate(${d3.event.translate}), ` +
             `scale(${d3.event.scale})`);
     }
 
-    private scaleVisualization(svg, zoom, renderedGraph) {
+    private scaleVisualization(svg: any, zoom: any, renderedGraph: any) {
         let xScale = svg.attr('width') / renderedGraph.width * 0.9;
         let yScale = svg.attr('height') / renderedGraph.height * 0.9;
         let newScale = Math.min(xScale, yScale, 0.9);
@@ -51,7 +54,27 @@ class DagreGraph {
         this.focusOnLocation(svg, zoom, -150, -150, newScale);
     }
 
-    private focusOnLocation(svg, zoom, x, y, scale) {
+    private breakLine(text: string): string {
+        let words = text.split(" ");
+        let lineLength = 0;
+        let newText = ""
+        for (let word of words) {
+            if (word.length + lineLength + 1 >= this.MAX_LENGHT) {
+                newText += `<br/>${word}`
+                lineLength = word.length + 1
+            } else {
+                newText += ` ${word}`
+                lineLength += word.length + 1
+            }
+        }
+        return newText
+    }
+
+    private focusOnLocation(svg: any,
+                            zoom: any,
+                            x: number,
+                            y: number,
+                            scale: number) {
         // transform both the svg and the zoom for it to work properly
         svg.select('g').transition().duration(500).attr(
             "transform", `scale(${scale}), translate(${-x},${-y})`);
@@ -60,13 +83,15 @@ class DagreGraph {
     }
 
     private addNode(id: string,
-                   title: string,
-                   description: string = "",
-                   style = "fill: rgb(220, 220, 220);") {
+                    title: string,
+                    description: string,
+                    style: string,
+                    shape: string) {
         let value = {
-            label: `<b>${title}</b><br/> ${description}`,
+            label: `<b>${title}</b><br/> ${this.breakLine(description)}`,
             labelType: "html",
-            style: style
+            style: style,
+            shape: shape
         }
         this.graph.setNode(id, value);
     }
@@ -74,10 +99,14 @@ class DagreGraph {
     private addEdge(id: string,
                     start: string,
                     end: string,
-                    description: string) {
+                    description: string,
+                    style: string,
+                    arrowheadStyle: string) {
         let value = {
             label: description,
-            lineInterpolate: 'basis'
+            lineInterpolate: 'basis',
+            style: style,
+            arrowheadStyle: arrowheadStyle
         }
         this.graph.setEdge(start, end, value, id);
     }

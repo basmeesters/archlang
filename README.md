@@ -20,9 +20,9 @@ TODO
     - ~~Nodes with a title & description.~~
     - ~~Edges with a description.~~
     - ~~Zooming and panning of the visualization.~~
-    - Various styles for both nodes and edges to distinguish various types
-      of blocks.
-    - Break long lines in descriptions.
+    - ~~Various styles for both nodes and edges to distinguish various types
+      of blocks.~~
+    - ~~Break long lines in descriptions.~~
     - Clusters to enable grouping.
     - Interactive hiding / showing of clusters and descriptions.
     - Ability to create a legend.

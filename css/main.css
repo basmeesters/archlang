@@ -15,11 +15,10 @@ text {
 }
 
 .edgePath path {
-  stroke: #333;
-  stroke-width: 1.5px;
+    stroke: #999;
+    fill: none;
 }
 
-/* State and transition text*/
 text {
     font-weight: 300;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;

@@ -1,16 +1,18 @@
 type JsonGraph = {
     nodes: Array<{
-        nodeId: string,
+        id: string,
         title: string,
         description: string,
-        style: string
+        style: string,
+        shape: string
     }>,
     edges: Array<{
-        edgeId: string,
+        id: string,
         source: string,
         target: string
         description: string,
-        style: string
+        style: string,
+        arrowHeadStyle: string
     }>
 }
 

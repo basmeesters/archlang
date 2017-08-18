@@ -2,8 +2,9 @@ Archlang
 ========
 
 Archlang is a small utility application (to be) that allows you to _describe_ a
-graph-structure (such as software architectures) using a small DSL, where after
-this structure is visualized. The layout algorithm is provided by
+graph-like structure (such as a software architecture diagram, hence _archlang_)
+using a small DSL, where after this structure is visualized. The layout
+algorithm & visualization itself is provided by
 [dagre-d3](https://github.com/cpettitt/dagre-d3/wiki).
 
 Run

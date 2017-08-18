@@ -7,6 +7,9 @@ class DagreGraph {
             compound:true,
             multigraph: true
         }).setGraph({});
+        this.graph.graph().transition = (selection: any) => {
+            return selection.transition().duration(500);
+        };
         this.createGraphFromJson(jsonGraph);
         this.render();
     }
@@ -14,37 +17,27 @@ class DagreGraph {
     public createGraphFromJson(jsonGraph: JsonGraph) {
         let clusters = []
         for (let node of jsonGraph.nodes) {
-            let description = node.description ? node.description : ""
             if (node.children) {
-                clusters.push({
-                    id: node.id,
-                    title: node.title,
-                    children: node.children,
-                    style: node.style
-                })
+                this.addClusterNode(node.id, node.title, node.style, node.children)
             } else {
-                this.addNode(node.id, node.title, description, node.style,
-                    node.shape);
+                this.addNode(node);
             }
-        }
-        for (let cluster of clusters) {
-            this.addCluster(cluster.id, cluster.title, cluster.children,
-                cluster.style)
         }
 
         for (let edge of jsonGraph.edges) {
-            this.addEdge(edge.id, edge.source, edge.target, edge.description,
-                edge.style, edge.arrowHeadStyle);
+            this.addEdge(edge);
         }
     }
 
     private render() {
         let render = new dagreD3.render();
-        let svg = d3.select('#graph');
+        var svg = d3.select("svg"),
+                svgGroup = svg.append("g");
         svg.attr('width', window.innerWidth * 1);
         svg.attr('height', window.innerHeight * 1);
-        render(svg, this.graph);
+        render(d3.select("svg g"), this.graph);
         this.setZoomBehavior(svg, this.graph.graph())
+        this.update(svg)
     }
 
     private setZoomBehavior(svg: any, renderedGraph: any): void {
@@ -97,48 +90,134 @@ class DagreGraph {
         zoom.scale(scale);
     }
 
-    private addNode(id: string,
-                    title: string,
-                    description: string,
-                    style: string,
-                    shape: string): void {
+    private addNode(node: GraphNode): void {
+        let description = node.description ? node.description : ""
         let value = {
-            label: `<b>${title}</b><br/> ${this.breakLine(description)}`,
+            label: `<b>${node.title}</b><br/> ${this.breakLine(description)}`,
             labelType: "html",
-            style: style,
-            shape: shape
+            style: node.style,
+            shape: node.shape,
+            expanded: false
         }
-        this.graph.setNode(id, value);
+        this.graph.setNode(node.id, value);
     }
 
-    private addCluster(id: string,
+    private addClusterNode(id: string,
                        title: string,
-                       children: Array<string>,
-                       style: string): void {
+                       style: string,
+                       children: JsonGraph): void {
         let value = {
             label: title,
             style: style,
             parent_level : 0,
-            clusterLabelPos : 'top'
+            clusterLabelPos : 'top',
+            children: children
         }
         this.graph.setNode(id, value)
-        for (let nodeId of children) {
-            this.graph.setParent(nodeId, id)
+    }
+
+    private addEdge(edge: GraphEdge) {
+        let value = {
+            label: edge.description,
+            lineInterpolate: 'basis',
+            style: edge.style,
+            arrowheadStyle: edge.arrowHeadStyle
+        }
+        this.graph.setEdge(edge.source, edge.target, value, edge.id);
+    }
+
+    private update(svg: any) {
+            svg.selectAll('g.node')
+                .on('click', (node_id: string) => {
+
+                    // a bit dirty, but check if a node has children OR is is expanded
+                    if(this.graph.node(node_id).children ||
+                       this.graph.node(node_id).collapsible) {
+                        if(!this.graph.node(node_id).collapsible)
+                            this.expand(node_id, svg);
+                        else
+                            this.collapse(node_id, svg);
+                    }
+                    else {
+                        console.log('no children');
+                    }
+                }
+            );
+    }
+    private expand(node_id: string, svg: any) {
+        let obj = this;
+        let g = this.graph
+        var in_edges = g.inEdges(node_id),
+            out_edges = g.outEdges(node_id),
+            children = g.node(node_id).children;
+
+        add_children();
+        remove_edges();
+        new_edges();
+        set_parent();
+        this.render()
+
+        function add_children() {
+            for(let i=0; i < children.nodes.length; i++) {
+                obj.addNode(children.nodes[i])
+            }
+
+            for(let i=0; i < children.edges.length; i++) {
+                obj.addEdge(children.edges[i])
+            }
+            return g
+        }
+
+        function remove_edges() {
+            for (var i=0; i < in_edges.length; i++) {
+                g.removeEdge(in_edges[i]);
+            }
+
+            for (var i=0; i < out_edges.length; i++) {
+                g.removeEdge(out_edges[i]);
+            }
+            return g
+        }
+
+        function new_edges() {
+
+            for(let i=0; i < in_edges.length; i++) {
+                g.setEdge(in_edges[i].v, children.nodes[0].id, {})
+            }
+
+            for(let i=0; i < out_edges.length; i++) {
+                g.setEdge(children.nodes[children.nodes.length -1].id, out_edges[i].w, {})
+            }
+        }
+
+        function set_parent() {
+            g.node(children.nodes[0].id).collapsible=true;
+            g.node(children.nodes[0].id).children = children;
+            g.node(children.nodes[0].id).deleted_in_edges = in_edges;
+            g.node(children.nodes[0].id).deleted_out_edges = out_edges;
+
+            for(let i=0; i < children.nodes.length; i++) {
+                g.setParent(children.nodes[i].id, node_id)
+            }
         }
     }
 
-    private addEdge(id: string,
-                    start: string,
-                    end: string,
-                    description: string,
-                    style: string,
-                    arrowheadStyle: string) {
-        let value = {
-            label: description,
-            lineInterpolate: 'basis',
-            style: style,
-            arrowheadStyle: arrowheadStyle
+    private collapse(node_id: string, svg: any) {
+        let g = this.graph
+        var node = g.node(node_id),
+            parent = g.parent(node_id);
+
+        for(var i =0; i < node.children.nodes.length; i++) {
+            g.removeNode(node.children.nodes[i].id);
         }
-        this.graph.setEdge(start, end, value, id);
+        for(var i =0; i < node.deleted_in_edges.length; i++) {
+            g.setEdge(node.deleted_in_edges[i].v, parent, {});
+        }
+
+        for(var i =0; i < node.deleted_out_edges.length; i++) {
+            g.setEdge(parent, node.deleted_out_edges[i].w);
+        }
+        this.render();
+
     }
 }

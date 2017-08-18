@@ -15,6 +15,15 @@ function createExampleGraph(): JsonGraph {
                 shape: "ellipse"
             },
             {
+                id: "c0",
+                title: "Coffee machine",
+                style: "fill: rgb(240, 240, 255);",
+                shape: "ellipse",
+                children: [
+                    "n1", "n2", "n3"
+                ]
+            },
+            {
                 id: "n1",
                 title: "Money Component",
                 description: "this component is able to process money. " +

@@ -2,9 +2,10 @@ type JsonGraph = {
     nodes: Array<{
         id: string,
         title: string,
-        description: string,
+        description?: string,
         style: string,
-        shape: string
+        shape: string,
+        children?: Array<string>
     }>,
     edges: Array<{
         id: string,

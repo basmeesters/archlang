@@ -12,9 +12,24 @@ class DagreGraph {
     }
 
     public createGraphFromJson(jsonGraph: JsonGraph) {
+        let clusters = []
         for (let node of jsonGraph.nodes) {
-            this.addNode(node.id, node.title, node.description, node.style,
-                node.shape);
+            let description = node.description ? node.description : ""
+            if (node.children) {
+                clusters.push({
+                    id: node.id,
+                    title: node.title,
+                    children: node.children,
+                    style: node.style
+                })
+            } else {
+                this.addNode(node.id, node.title, description, node.style,
+                    node.shape);
+            }
+        }
+        for (let cluster of clusters) {
+            this.addCluster(cluster.id, cluster.title, cluster.children,
+                cluster.style)
         }
 
         for (let edge of jsonGraph.edges) {
@@ -32,7 +47,7 @@ class DagreGraph {
         this.setZoomBehavior(svg, this.graph.graph())
     }
 
-    private setZoomBehavior(svg: any, renderedGraph: any) {
+    private setZoomBehavior(svg: any, renderedGraph: any): void {
         let zoom = d3.behavior.zoom();
         zoom.on("zoom", () => this.zoomBehavior(svg));
         svg.call(zoom);
@@ -74,7 +89,7 @@ class DagreGraph {
                             zoom: any,
                             x: number,
                             y: number,
-                            scale: number) {
+                            scale: number): void {
         // transform both the svg and the zoom for it to work properly
         svg.select('g').transition().duration(500).attr(
             "transform", `scale(${scale}), translate(${-x},${-y})`);
@@ -86,7 +101,7 @@ class DagreGraph {
                     title: string,
                     description: string,
                     style: string,
-                    shape: string) {
+                    shape: string): void {
         let value = {
             label: `<b>${title}</b><br/> ${this.breakLine(description)}`,
             labelType: "html",
@@ -94,6 +109,22 @@ class DagreGraph {
             shape: shape
         }
         this.graph.setNode(id, value);
+    }
+
+    private addCluster(id: string,
+                       title: string,
+                       children: Array<string>,
+                       style: string): void {
+        let value = {
+            label: title,
+            style: style,
+            parent_level : 0,
+            clusterLabelPos : 'top'
+        }
+        this.graph.setNode(id, value)
+        for (let nodeId of children) {
+            this.graph.setParent(nodeId, id)
+        }
     }
 
     private addEdge(id: string,

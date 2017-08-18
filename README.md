@@ -23,7 +23,7 @@ TODO
     - ~~Various styles for both nodes and edges to distinguish various types
       of blocks.~~
     - ~~Break long lines in descriptions.~~
-    - Clusters to enable grouping.
+    - ~~Clusters to enable grouping.~~
     - Interactive hiding / showing of clusters and descriptions.
     - Ability to create a legend.
 * [ ] A small language to describe the graph-like structure, that gets

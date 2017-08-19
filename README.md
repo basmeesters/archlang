@@ -25,7 +25,7 @@ TODO
       of blocks.~~
     - ~~Break long lines in descriptions.~~
     - ~~Clusters to enable grouping.~~
-    - Interactive hiding / showing of clusters and descriptions.
+    - Interactive hiding / showing of clusters.
     - Ability to create a legend.
 * [ ] A small language to describe the graph-like structure, that gets
       interpreted and visualized.

@@ -7,7 +7,7 @@ abstract class Result {
     /**
       * Apply a function over the value and return a new Result.
       */
-    public abstract map: (fn: (val: string) => any) => Result;
+    public abstract map: (fn: (val: any) => any) => Result;
 
     /**
       * Apply a function over both the value and the remainder.
@@ -17,7 +17,10 @@ abstract class Result {
     /**
       * Fold the result providing both success and failure functions.
       */
-    public abstract fold: (success: any, failure: any) => Result;
+    public abstract fold: (
+        success: (val: any, rest: any) => any,
+        failure: (val: any, rest: any) => any
+    ) => Result;
 }
 
 class Success extends Result {

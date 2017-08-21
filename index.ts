@@ -1,7 +1,16 @@
+const exampleInput = `n1 "Some title" "some description"
+n2 "Title2" "second description"
+n3 "Title3" "no description"
+n1 --""--> n2
+`
+
 function start(): void {
     console.log("loaded")
     let jsonGraph = createExampleGraph()
-    new DagreGraph(jsonGraph);
+    let graph = GraphParser.parseGraph(exampleInput)
+    console.log(graph.toJson())
+    new DagreGraph(graph.toJson());
+
 }
 
 function createExampleGraph(): JsonGraph {

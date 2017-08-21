@@ -19,21 +19,30 @@ class Parser {
     /**
       * Map the function given over the result of parsing.
       */
-    public map(f): Parser {
-        return new Parser(stream => this.parse(stream).map(f))
+    public map(f: (val: any) => any): Parser {
+        return new Parser(stream =>
+            this.parse(stream).map(f)
+        )
     }
 
     /**
       * Chain the function given over the result of parsing.
       */
-    public chain(f): Parser {
-        return new Parser(stream => this.parse(stream).chain((v, s) => f(v).run(s)))
+    public chain(f: (val: any) => Parser): Parser {
+        return new Parser(stream =>
+            this.parse(stream).chain((v, s) => f(v).run(s))
+        )
     }
 
     /**
       * Fold the function given over the result of parsing.
       */
-    public fold(s, f): Parser {
-        return new Parser(stream => this.parse(stream).fold(s, f))
+    public fold(
+            success: (val: any, rest: any) => any,
+            failure: (val: any, rest: any) => any
+        ): Parser {
+        return new Parser(stream =>
+            this.parse(stream).fold(success, failure)
+        )
     }
 }

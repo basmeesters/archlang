@@ -39,6 +39,21 @@ const concat = (p1: Parser, p2: Parser): Parser =>
 const sequence = list =>
     list.reduce((acc, parser) => append(acc, parser), always([]))
 
+const separatorAndEnd = (list, separator, end) => {
+    return append(
+        sequence(flatten(list.map(l => [l, separator])).slice(0, -1)
+    ), end).map(l =>
+        l.reduce((acc, el) =>
+            typeof el == "string" ? acc : acc.concat([el])
+        , [])
+    )
+}
+
+
+const flatten = (data: Array<Array<any>>): Array<any> =>
+    data.reduce((acc, e) => acc.concat(e), [])
+
+
 const maybe = (parser: Parser): Parser =>
     new Parser(stream =>
         parser.run(stream)

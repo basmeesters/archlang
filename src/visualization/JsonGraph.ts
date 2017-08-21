@@ -1,9 +1,9 @@
 type JsonGraph = {
-    nodes: Array<GraphNode>,
-    edges: Array<GraphEdge>
+    nodes: Array<JsonNode>,
+    edges: Array<JsonEdge>
 }
 
-type GraphNode = {
+type JsonNode = {
     id: string,
     title: string,
     description?: string,
@@ -12,7 +12,7 @@ type GraphNode = {
     children?: JsonGraph
 }
 
-type GraphEdge = {
+type JsonEdge = {
     id: string,
     source: string,
     target: string

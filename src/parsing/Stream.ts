@@ -32,20 +32,4 @@ class Stream {
             this.length - distance
         )
     }
-
-    // Same interface as Array.slice but returns a new Stream
-    // NOTE: not used?
-    private slice(start, stop) {
-        if (stop < start) {
-            throw new Error('stop < start')
-        }
-        if (stop && stop > this.length) {
-            throw new TypeError('index out of range')
-        }
-        return new Stream(
-            this.iterable,
-            this.cursor + start,
-            (stop || this.length) - start
-        )
-    }
 }

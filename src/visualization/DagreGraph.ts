@@ -90,7 +90,7 @@ class DagreGraph {
         zoom.scale(scale);
     }
 
-    private addNode(node: GraphNode): void {
+    private addNode(node: JsonNode): void {
         let description = node.description ? node.description : ""
         let value = {
             label: `<b>${node.title}</b><br/> ${this.breakLine(description)}`,

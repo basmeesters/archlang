@@ -43,16 +43,14 @@ const separatorAndEnd = (list, separator, end) => {
     return append(
         sequence(flatten(list.map(l => [l, separator])).slice(0, -1)
     ), end).map(l =>
-        l.reduce((acc, el) =>
-            typeof el == "string" ? acc : acc.concat([el])
+        l.reduce((acc, el, index) =>
+            index % 2 == 1 ? acc : acc.concat([el])
         , [])
     )
 }
 
-
 const flatten = (data: Array<Array<any>>): Array<any> =>
     data.reduce((acc, e) => acc.concat(e), [])
-
 
 const maybe = (parser: Parser): Parser =>
     new Parser(stream =>
@@ -94,3 +92,5 @@ const between = (l: Parser, p: Parser, r: Parser): Parser =>
 
 const takeLeft = (l: Parser, r: Parser): Parser =>
     sequence([l, r]).map(v => v[0])
+
+const whitespace = zeroOrMore(either([string(" "), string("\n")]))

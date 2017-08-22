@@ -55,9 +55,9 @@ class DagreGraph {
     }
 
     private scaleVisualization(svg: any, zoom: any, renderedGraph: any) {
-        let xScale = svg.attr('width') / renderedGraph.width * 0.9;
-        let yScale = svg.attr('height') / renderedGraph.height * 0.9;
-        let newScale = Math.min(xScale, yScale, 0.9);
+        let xScale = svg.attr('width') / renderedGraph.width * 1;
+        let yScale = svg.attr('height') / renderedGraph.height * 1;
+        let newScale = Math.min(xScale, yScale, 1);
 
         this.focusOnLocation(svg, zoom, -150, -150, newScale);
     }
@@ -107,7 +107,8 @@ class DagreGraph {
                        style: string,
                        children: JsonGraph): void {
         let value = {
-            label: title,
+            label: `<b>${title}</b>`,
+            labelType: "html",
             style: style,
             parent_level : 0,
             clusterLabelPos : 'top',
@@ -116,7 +117,7 @@ class DagreGraph {
         this.graph.setNode(id, value)
     }
 
-    private addEdge(edge: GraphEdge) {
+    private addEdge(edge: JsonEdge) {
         let value = {
             label: edge.description,
             lineInterpolate: 'basis',
@@ -151,6 +152,9 @@ class DagreGraph {
             out_edges = g.outEdges(node_id),
             children = g.node(node_id).children;
 
+        let oldEdges = in_edges.map((i, index) => {
+            return {edge: in_edges[index], value: g.edge(i)}
+        })
         add_children();
         remove_edges();
         new_edges();
@@ -170,6 +174,8 @@ class DagreGraph {
 
         function remove_edges() {
             for (var i=0; i < in_edges.length; i++) {
+                let value = g.edge(in_edges[i])
+                in_edges[i].value = value
                 g.removeEdge(in_edges[i]);
             }
 
@@ -180,9 +186,8 @@ class DagreGraph {
         }
 
         function new_edges() {
-
-            for(let i=0; i < in_edges.length; i++) {
-                g.setEdge(in_edges[i].v, children.nodes[0].id, {})
+            for(let i=0; i < oldEdges.length; i++) {
+                g.setEdge(oldEdges[i].edge.v, children.nodes[0].id, oldEdges[i].value)
             }
 
             for(let i=0; i < out_edges.length; i++) {
@@ -193,7 +198,7 @@ class DagreGraph {
         function set_parent() {
             g.node(children.nodes[0].id).collapsible=true;
             g.node(children.nodes[0].id).children = children;
-            g.node(children.nodes[0].id).deleted_in_edges = in_edges;
+            g.node(children.nodes[0].id).deleted_in_edges = oldEdges;
             g.node(children.nodes[0].id).deleted_out_edges = out_edges;
 
             for(let i=0; i < children.nodes.length; i++) {
@@ -211,7 +216,8 @@ class DagreGraph {
             g.removeNode(node.children.nodes[i].id);
         }
         for(var i =0; i < node.deleted_in_edges.length; i++) {
-            g.setEdge(node.deleted_in_edges[i].v, parent, {});
+            console.log(node.deleted_in_edges[i])
+            g.setEdge(node.deleted_in_edges[i].edge.v, parent, node.deleted_in_edges[i].value);
         }
 
         for(var i =0; i < node.deleted_out_edges.length; i++) {

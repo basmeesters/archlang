@@ -20,7 +20,7 @@ abstract class Result {
     public abstract fold: (
         success: (val: any, rest: any) => any,
         failure: (val: any, rest: any) => any
-    ) => Result;
+    ) => any;
 }
 
 class Success extends Result {

@@ -1,12 +1,7 @@
 class GraphParser {
     public static parseGraph(input: string) {
-        return sequence([
-            zeroOrMore(GraphParser.parseComponent),
-            zeroOrMore(GraphParser.parseConnector)
-        ])
-            .run(input)
-            .fold(
-                v => new Architecture(v[0], v[1]),
+        return GraphParser.parseArchitecture.run(input).fold(
+                v => v,
                 e => e
             )
     }
@@ -50,5 +45,34 @@ class GraphParser {
             const target = list[2].join("")
             const label = list[1].join("")
             return new Connector(source, target, label)
+        })
+
+    private static parseCluster: Parser =
+        sequence([
+            string("cluster "),
+            GraphParser.parseId,
+            string("\n"),
+            zeroOrMore(GraphParser.parseComponent),
+            zeroOrMore(GraphParser.parseConnector),
+            string("end\n")
+        ]).map(list => {
+            const id = list[1].join("")
+            const title = id
+            const description = ""
+            const architecture = new Architecture(list[3], list[4])
+
+            return new Component(id, title, description, Shape.Rect, Color.Gray, architecture)
+        })
+
+    private static parseArchitecture: Parser =
+        sequence([
+            whitespace,
+            zeroOrMore(either([GraphParser.parseCluster, GraphParser.parseComponent])),
+            whitespace,
+            zeroOrMore(GraphParser.parseConnector)
+        ]).map(list => {
+            const nodes = list[1]
+            const edges = list[3]
+            return new Architecture(nodes, edges)
         })
 }

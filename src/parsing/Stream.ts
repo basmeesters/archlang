@@ -1,7 +1,5 @@
 /**
-  * Originally taken from:
-  * https://medium.com/@chetcorcos/introduction-to-parsers-644d1b5d7f3d and
-  * modified to work with TypeScript.
+  *
   */
 class Stream {
     constructor(private iterable: string,

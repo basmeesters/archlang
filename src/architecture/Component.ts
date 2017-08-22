@@ -4,7 +4,8 @@ class Component {
         public title: string,
         public description: string,
         public shape: Shape = Shape.Rect,
-        public color: Color = Color.Gray
+        public color: Color = Color.Gray,
+        public children: Architecture = undefined
     ) { }
 
     public toJson(): JsonNode {
@@ -13,7 +14,8 @@ class Component {
             title: this.title,
             description: this.description,
             shape: this.shapeToJson(this.shape),
-            style: this.colorToJson(this.color)
+            style: this.colorToJson(this.color),
+            children: this.children ? this.children.toJson() : undefined
         }
     }
 

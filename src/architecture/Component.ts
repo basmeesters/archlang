@@ -5,7 +5,7 @@ class Component {
         public description: string,
         public shape: Shape = Shape.Rect,
         public color: Color = Color.Gray,
-        public children: Architecture = undefined
+        public children?: Architecture
     ) { }
 
     public toJson(): JsonNode {
@@ -19,7 +19,7 @@ class Component {
         }
     }
 
-    private shapeToJson(shape) {
+    private shapeToJson(shape: Shape): string {
         switch(shape) {
             case Shape.Ellipse:
                 return "ellipse";
@@ -28,7 +28,7 @@ class Component {
         }
     }
 
-    private colorToJson(color) {
+    private colorToJson(color: Color): string {
         switch(color) {
             case Color.Gray:
                 return "fill: rgb(240, 240, 240);";

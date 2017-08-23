@@ -3,17 +3,13 @@
   * helper functions to chain and map over existing parsers.
   */
 class Parser {
-    constructor(private parse: (stream) => Result) { }
+    constructor(private parse: (stream: Stream) => Result) { }
 
     /**
       * Run the parser over the stream.
       */
-    public run(iterable) {
-        if (iterable instanceof Stream) {
-            return this.parse(iterable)
-        } else {
-            return this.parse(new Stream(iterable))
-        }
+    public run(stream: Stream) {
+        return this.parse(stream)
     }
 
     /**
@@ -26,7 +22,8 @@ class Parser {
     }
 
     /**
-      * Chain the function given over the result of parsing.
+      * First parse the parser given in the constructor, then parse the
+      * parser given as argument.
       */
     public chain(f: (val: any) => Parser): Parser {
         return new Parser(stream =>
@@ -38,10 +35,10 @@ class Parser {
       * Fold the function given over the result of parsing.
       */
     public fold(
-            success: (val: any, rest: any) => any,
-            failure: (val: any, rest: any) => any
+            success: (val: any, rest: Stream) => any,
+            failure: (val: any, rest: Stream) => any
         ): Parser {
-        return new Parser(stream =>
+        return new Parser((stream: Stream) =>
             this.parse(stream).fold(success, failure)
         )
     }

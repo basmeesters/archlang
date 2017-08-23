@@ -6,7 +6,7 @@ class Connector {
         public color: Color = Color.Gray
     ) { }
 
-    public toJson(id): JsonEdge {
+    public toJson(id: string): JsonEdge {
         return {
             id: id,
             source: this.source,

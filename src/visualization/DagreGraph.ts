@@ -152,7 +152,7 @@ class DagreGraph {
             out_edges = g.outEdges(node_id),
             children = g.node(node_id).children;
 
-        let oldEdges = in_edges.map((i, index) => {
+        let oldEdges = in_edges.map((i: number, index: number) => {
             return {edge: in_edges[index], value: g.edge(i)}
         })
         add_children();
@@ -175,7 +175,6 @@ class DagreGraph {
         function remove_edges() {
             for (var i=0; i < in_edges.length; i++) {
                 let value = g.edge(in_edges[i])
-                in_edges[i].value = value
                 g.removeEdge(in_edges[i]);
             }
 
@@ -196,7 +195,7 @@ class DagreGraph {
         }
 
         function set_parent() {
-            g.node(children.nodes[0].id).collapsible=true;
+            g.node(children.nodes[0].id).collapsible = true;
             g.node(children.nodes[0].id).children = children;
             g.node(children.nodes[0].id).deleted_in_edges = oldEdges;
             g.node(children.nodes[0].id).deleted_out_edges = out_edges;

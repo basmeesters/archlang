@@ -1,11 +1,11 @@
 /**
-  *
+  * Wrapper around iterable (array or string) to make it immutatable.
   */
 class Stream {
     constructor(private iterable: string,
                 private cursor: number = 0,
-                private length: number = undefined) {
-        this.length = length === undefined
+                private length: number = -1) {
+        this.length = length === -1
             ? iterable.length - this.cursor
             : length
     }
@@ -18,6 +18,13 @@ class Stream {
             throw new TypeError('index out of range')
         }
         return this.iterable[this.cursor]
+    }
+
+    /**
+      * Get the size of the (remaining) stream.
+      */
+    public size(): number {
+        return this.length
     }
 
     /**

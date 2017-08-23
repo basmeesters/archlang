@@ -1,6 +1,10 @@
+/**
+  * Using the `ParserCombinators` provide parsers to provide the Archlang's DSL.
+  */
 class GraphParser {
     public static parseGraph(input: string) {
-        return GraphParser.parseArchitecture.run(input).fold(
+        const stream = new Stream(input)
+        return GraphParser.parseArchitecture.run(stream).fold(
                 v => v,
                 e => e
             )
@@ -34,6 +38,7 @@ class GraphParser {
             GraphParser.parseDescription,
             string("-->")
         )
+
 
     private static parseConnector: Parser =
         separatorAndEnd([

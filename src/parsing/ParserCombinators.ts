@@ -88,6 +88,13 @@ const separatorAndEnd = (
 const flatten = (data: Array<Array<any>>): Array<any> =>
     data.reduce((acc, e) => acc.concat(e), [])
 
+const maybe = (parser: Parser): Parser =>
+    new Parser(stream =>
+        parser.run(stream)
+            .fold(
+            (v, s) => new Success(v, s),
+            (v) => new Success(null, stream)))
+
 /**
   * Give a parse result without consuming anything from the stream.
   */

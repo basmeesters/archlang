@@ -3,17 +3,18 @@ class Connector {
         public source: string,
         public target: string,
         public label: string,
-        public color: Color = Color.Gray
+        public color: Color = Color.DarkGray
     ) { }
 
     public toJson(id: string): JsonEdge {
+        const color = Component.colorToJson(this.color);
         return {
             id: id,
             source: this.source,
             target: this.target,
             description: this.label,
-            style: "",
-            arrowHeadStyle: "fill: rgb(153, 153, 153);"
+            style: `stroke: ${color}; stroke-width: 1.5px;`,
+            arrowHeadStyle: `fill: ${color};`
         }
     }
 }

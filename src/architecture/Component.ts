@@ -14,7 +14,7 @@ class Component {
             title: this.title,
             description: this.description,
             shape: this.shapeToJson(this.shape),
-            style: this.colorToJson(this.color),
+            style: `fill: ${Component.colorToJson(this.color)}`,
             children: this.children ? this.children.toJson() : undefined
         }
     }
@@ -28,14 +28,16 @@ class Component {
         }
     }
 
-    private colorToJson(color: Color): string {
+    public static colorToJson(color: Color): string {
         switch(color) {
             case Color.Gray:
-                return "fill: rgb(240, 240, 240);";
+                return "rgb(230, 230, 230);";
             case Color.LightBlue:
-                return "";
+                return "rgb(210, 210, 255);";
             case Color.Red:
-                return "";
+                return "rgb(255, 210, 210);";
+            case Color.DarkGray:
+                return "rgb(153, 153, 153);"
         }
     }
 }

@@ -41,10 +41,10 @@ TODO
     - ~~Interpret components (nodes).~~
     - ~~Interpret connectors (edges).~~
     - ~~Interpret clusters.~~
-    - Interpret layout options.
-    - Work correctly with insignificant whitespace.
+    - ~~Interpret layout options.~~
+    - Work better with insignificant whitespace.
     - Allow for comments.
-    - Better parse error messages.
+    - Better error messages parsing.
 * [ ] Add some utility features.
     - import from file.
     - export to pdf / svg / png(?).

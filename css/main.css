@@ -8,14 +8,14 @@ text {
   font-size: 14px;
 }
 
-.node rect {
+.node rect, .node ellipse {
   stroke: #999;
   fill: #fff;
   stroke-width: 1.5px;
 }
 
 .edgePath path {
-    stroke: #999;
+    /*stroke: #999;*/
     fill: none;
 }
 

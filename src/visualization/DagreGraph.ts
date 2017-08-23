@@ -17,11 +17,7 @@ class DagreGraph {
     public createGraphFromJson(jsonGraph: JsonGraph) {
         let clusters = []
         for (let node of jsonGraph.nodes) {
-            if (node.children) {
-                this.addClusterNode(node.id, node.title, node.style, node.children)
-            } else {
-                this.addNode(node);
-            }
+            this.addNode(node);
         }
 
         for (let edge of jsonGraph.edges) {
@@ -97,24 +93,10 @@ class DagreGraph {
             labelType: "html",
             style: node.style,
             shape: node.shape,
-            expanded: false
+            expanded: false,
+            children: node.children
         }
         this.graph.setNode(node.id, value);
-    }
-
-    private addClusterNode(id: string,
-                       title: string,
-                       style: string,
-                       children: JsonGraph): void {
-        let value = {
-            label: `<b>${title}</b>`,
-            labelType: "html",
-            style: style,
-            parent_level : 0,
-            clusterLabelPos : 'top',
-            children: children
-        }
-        this.graph.setNode(id, value)
     }
 
     private addEdge(edge: JsonEdge) {
@@ -215,7 +197,6 @@ class DagreGraph {
             g.removeNode(node.children.nodes[i].id);
         }
         for(var i =0; i < node.deleted_in_edges.length; i++) {
-            console.log(node.deleted_in_edges[i])
             g.setEdge(node.deleted_in_edges[i].edge.v, parent, node.deleted_in_edges[i].value);
         }
 

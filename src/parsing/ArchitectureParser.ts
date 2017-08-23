@@ -11,7 +11,17 @@ class GraphParser {
     }
 
     private static parseId: Parser =
-        zeroOrMore(not(either([string(" "), string("\n")])))
+        zeroOrMore(
+            not(
+                either([
+                    string(" "),
+                    string("\n"),
+                    string("|"),
+                    string("("),
+                    string(")")]
+                )
+            )
+        )
 
     private static parseDescription: Parser =
         between(
@@ -20,16 +30,47 @@ class GraphParser {
             char('"'),
         )
 
+    private static parseShapeAndParser(parser: Parser): Parser {
+        return either([
+            between(string("|"), parser, string("|")).map(l =>
+                [l.join(""), Shape.Rect]
+            ),
+            between(string("("), parser, string(")")).map(l =>
+                [l.join(""), Shape.Ellipse]
+            ),
+            parser.map(l => [l.join(""), Shape.Rect])
+        ])
+    }
+
+    private static parseColor: Parser =
+        maybe(
+            sequence([
+                string(" "),
+                either([
+                    string("blue").map(c => Color.LightBlue),
+                    string("gray").map(c => Color.Gray),
+                    string("red").map(c => Color.Red),
+                    string("dark-grey").map(c => Color.DarkGray)
+                ])
+            ]).map(l => l[1])
+        )
+
     private static parseComponent: Parser =
-        separatorAndEnd([
-            GraphParser.parseId,
+        sequence([
+            GraphParser.parseShapeAndParser(GraphParser.parseId),
+            string(" "),
             GraphParser.parseDescription,
-            GraphParser.parseDescription
-        ], string(" "), string("\n")).map(list => {
-            const id = list[0].join("")
-            const title = list[1].join("")
-            const description = list[2].join("")
-            return new Component(id, title, description)
+            string(" "),
+            GraphParser.parseDescription,
+            GraphParser.parseColor,
+            string("\n")
+        ]).map(list => {
+            const id = list[0][0]
+            const shape = list[0][1]
+            const title = list[2].join("")
+            const description = list[4].join("")
+            const color = list[5] ? list[5] : Color.Gray
+            return new Component(id, title, description, shape, color)
         })
 
     private static parseArrow: Parser =
@@ -41,32 +82,43 @@ class GraphParser {
 
 
     private static parseConnector: Parser =
-        separatorAndEnd([
+        sequence([
             GraphParser.parseId,
+            string(" "),
             GraphParser.parseArrow,
-            GraphParser.parseId
-        ], char(" "), char("\n")).map(list => {
+            string(" "),
+            GraphParser.parseId,
+            GraphParser.parseColor,
+            string("\n")
+        ]).map(list => {
             const source = list[0].join("")
-            const target = list[2].join("")
-            const label = list[1].join("")
-            return new Connector(source, target, label)
+            const label = list[2].join("")
+            const target = list[4].join("")
+            const color = list[5] ? list[5] : Color.DarkGray
+            return new Connector(source, target, label, color)
         })
+
+    private parseClusterType: Parser
 
     private static parseCluster: Parser =
         sequence([
-            string("cluster "),
+            GraphParser.parseShapeAndParser(string("cluster")),
+            string(" "),
             GraphParser.parseId,
+            GraphParser.parseColor,
             string("\n"),
             zeroOrMore(GraphParser.parseComponent),
             zeroOrMore(GraphParser.parseConnector),
             string("end\n")
         ]).map(list => {
-            const id = list[1].join("")
+            const id = list[2].join("")
             const title = id
             const description = ""
-            const architecture = new Architecture(list[3], list[4])
+            const shape = list[0][1]
+            const color = list[3] ? list[3] : Color.Gray
+            const architecture = new Architecture(list[5], list[6])
 
-            return new Component(id, title, description, Shape.Rect, Color.Gray, architecture)
+            return new Component(id, title, description, shape, color, architecture)
         })
 
     private static parseArchitecture: Parser =

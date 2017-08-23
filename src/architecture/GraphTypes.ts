@@ -5,6 +5,7 @@ enum Shape {
 
 enum Color {
     Gray,
+    DarkGray,
     LightBlue,
-    Red
+    Red,
 }

@@ -10,7 +10,7 @@ const where = (pred: (val: any) => boolean): Parser => {
         if (pred(value)) {
             return new Success(value, stream.move(1))
         }
-        return new Failure(`predicate <${pred}> did not match`, stream)
+        return new Failure(`predicate did not match`, stream)
     })
 }
 
@@ -136,5 +136,13 @@ const between = (l: Parser, p: Parser, r: Parser): Parser =>
     sequence([l, p, r]).map(v => v[1])
 
 const space: Parser = string(" ")
+
 const newLine: Parser = string("\n")
-const whitespace: Parser = zeroOrMore(either([space, newLine]))
+
+const comment: Parser = between(
+    string("//"),
+    zeroOrMore(not(string("\n"))),
+    string("\n")
+)
+
+const whitespace: Parser = zeroOrMore(either([space, newLine, comment]))

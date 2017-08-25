@@ -43,7 +43,7 @@ TODO
     - ~~Interpret clusters.~~
     - ~~Interpret layout options.~~
     - ~~Work better with insignificant whitespace.~~
-    - Allow for comments.
+    - ~~Allow for comments.~~
     - Better error messages parsing.
 * [ ] Include & use testing framework.
 * [ ] Add some utility features.

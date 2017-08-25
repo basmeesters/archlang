@@ -1,5 +1,6 @@
 /**
-  * Using the `ParserCombinators` provide parsers to provide the Archlang's DSL.
+  * Use the `ParserCombinators` parsers to provide means to parse the Archlang's
+  * DSL.
   */
 class ArchitectureParser {
     public static parseGraph(input: string) {
@@ -123,7 +124,8 @@ class ArchitectureParser {
             const color = list[3] ? list[3] : Color.Gray
             const architecture = new Architecture(list[6], list[7])
 
-            return new Component(id, title, description, shape, color, architecture)
+            return new Component(id, title, description, shape, color,
+                architecture)
         })
 
     private static parseClusters: Parser =

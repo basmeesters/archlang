@@ -1,7 +1,8 @@
 const exampleInput = `
+// Example graph
 (n0) "User" "" red
-
 |cluster| t1 gray
+    // Fat money componet yo
     n1 "Money component" "this component is able to
                           process money. So just it keeps
                           track of all the money you throw

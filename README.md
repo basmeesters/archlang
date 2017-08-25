@@ -42,9 +42,10 @@ TODO
     - ~~Interpret connectors (edges).~~
     - ~~Interpret clusters.~~
     - ~~Interpret layout options.~~
-    - Work better with insignificant whitespace.
+    - ~~Work better with insignificant whitespace.~~
     - Allow for comments.
     - Better error messages parsing.
+* [ ] Include & use testing framework.
 * [ ] Add some utility features.
     - import from file.
     - export to pdf / svg / png(?).

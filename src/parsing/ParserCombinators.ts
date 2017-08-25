@@ -66,21 +66,14 @@ const sequence = (list: Array<Parser>): Parser => {
 }
 
 /**
-  * Parse each parser separator by the separator and finished with the end
-  * parser.
+  * Parse zero or more of the same parser and ignore all instances of the
+  * second parser.
   */
-const separatorAndEnd = (
-    list: Array<Parser>,
-    separator: Parser,
-    end: Parser
-) =>
-    append(
-        sequence(flatten(list.map((l: any) => [l, separator])).slice(0, -1)
-    ), end).map(l =>
-        l.reduce((acc: Array<Parser>, el: Parser, index: number) =>
-            index % 2 == 1 ? acc : acc.concat([el])
-        , [])
-    )
+const zeroOrMoreAndIgnore = (parser: Parser, ignore: Parser): Parser =>
+    zeroOrMore(sequence([
+        parser,
+        whitespace
+    ])).map((list) => list.map((l: any, i: number) => l[0]))
 
 /**
   * Helper function to flatten an array of arrays.
@@ -142,7 +135,6 @@ const not = (parser: Parser): Parser =>
 const between = (l: Parser, p: Parser, r: Parser): Parser =>
     sequence([l, p, r]).map(v => v[1])
 
-/**
-  * Parse whitespace and newlines.
-  */
-const whitespace: Parser = zeroOrMore(either([string(" "), string("\n")]))
+const space: Parser = string(" ")
+const newLine: Parser = string("\n")
+const whitespace: Parser = zeroOrMore(either([space, newLine]))

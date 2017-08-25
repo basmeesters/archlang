@@ -1,10 +1,10 @@
 /**
   * Using the `ParserCombinators` provide parsers to provide the Archlang's DSL.
   */
-class GraphParser {
+class ArchitectureParser {
     public static parseGraph(input: string) {
         const stream = new Stream(input)
-        return GraphParser.parseArchitecture.run(stream).fold(
+        return ArchitectureParser.parseArchitecture.run(stream).fold(
                 v => v,
                 e => e
             )
@@ -57,12 +57,12 @@ class GraphParser {
 
     private static parseComponent: Parser =
         sequence([
-            GraphParser.parseShapeAndParser(GraphParser.parseId),
+            ArchitectureParser.parseShapeAndParser(ArchitectureParser.parseId),
             string(" "),
-            GraphParser.parseDescription,
+            ArchitectureParser.parseDescription,
             string(" "),
-            GraphParser.parseDescription,
-            GraphParser.parseColor,
+            ArchitectureParser.parseDescription,
+            ArchitectureParser.parseColor,
             string("\n")
         ]).map(list => {
             const id = list[0][0]
@@ -73,22 +73,25 @@ class GraphParser {
             return new Component(id, title, description, shape, color)
         })
 
+    private static parseComponents: Parser =
+        zeroOrMoreAndIgnore(ArchitectureParser.parseComponent, whitespace)
+
     private static parseArrow: Parser =
         between(
             string("--"),
-            GraphParser.parseDescription,
+            ArchitectureParser.parseDescription,
             string("-->")
         )
 
 
     private static parseConnector: Parser =
         sequence([
-            GraphParser.parseId,
+            ArchitectureParser.parseId,
             string(" "),
-            GraphParser.parseArrow,
+            ArchitectureParser.parseArrow,
             string(" "),
-            GraphParser.parseId,
-            GraphParser.parseColor,
+            ArchitectureParser.parseId,
+            ArchitectureParser.parseColor,
             string("\n")
         ]).map(list => {
             const source = list[0].join("")
@@ -98,17 +101,19 @@ class GraphParser {
             return new Connector(source, target, label, color)
         })
 
-    private parseClusterType: Parser
+    private static parseConnectors: Parser =
+        zeroOrMoreAndIgnore(ArchitectureParser.parseConnector, whitespace)
 
     private static parseCluster: Parser =
         sequence([
-            GraphParser.parseShapeAndParser(string("cluster")),
+            ArchitectureParser.parseShapeAndParser(string("cluster")),
             string(" "),
-            GraphParser.parseId,
-            GraphParser.parseColor,
+            ArchitectureParser.parseId,
+            ArchitectureParser.parseColor,
             string("\n"),
-            zeroOrMore(GraphParser.parseComponent),
-            zeroOrMore(GraphParser.parseConnector),
+            whitespace,
+            ArchitectureParser.parseComponents,
+            ArchitectureParser.parseConnectors,
             string("end\n")
         ]).map(list => {
             const id = list[2].join("")
@@ -116,17 +121,26 @@ class GraphParser {
             const description = ""
             const shape = list[0][1]
             const color = list[3] ? list[3] : Color.Gray
-            const architecture = new Architecture(list[5], list[6])
+            const architecture = new Architecture(list[6], list[7])
 
             return new Component(id, title, description, shape, color, architecture)
         })
 
+    private static parseClusters: Parser =
+        zeroOrMoreAndIgnore(
+            either([
+                ArchitectureParser.parseCluster,
+                ArchitectureParser.parseComponent
+            ]),
+            whitespace
+        )
+
     private static parseArchitecture: Parser =
         sequence([
             whitespace,
-            zeroOrMore(either([GraphParser.parseCluster, GraphParser.parseComponent])),
+            ArchitectureParser.parseClusters,
             whitespace,
-            zeroOrMore(GraphParser.parseConnector)
+            ArchitectureParser.parseConnectors
         ]).map(list => {
             const nodes = list[1]
             const edges = list[3]

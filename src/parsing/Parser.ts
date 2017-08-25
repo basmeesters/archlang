@@ -3,7 +3,9 @@
   * helper functions to chain and map over existing parsers.
   */
 class Parser {
-    constructor(private parse: (stream: Stream) => Result) { }
+    constructor(
+        private parse: (stream: Stream) => Result
+    ) { }
 
     /**
       * Run the parser over the stream.

@@ -1,16 +1,25 @@
 /**
+  * Predicate that needs to be checked for parsing. It needs a 'check' function
+  * and a description stating what is being checked for easy error messaging.
+  */
+type Predicate = {
+    run: (val: string) => boolean,
+    description: (val: string) => string
+}
+
+/**
   * Check if a predicate function returns true on the head of the stream given.
   */
-const where = (pred: (val: any) => boolean): Parser => {
+const where = (pred: Predicate): Parser => {
     return new Parser(stream => {
         if (stream.size() === 0) {
             return new Failure('unexpected end', stream)
         }
         const value = stream.head()
-        if (pred(value)) {
+        if (pred.run(value)) {
             return new Success(value, stream.move(1))
         }
-        return new Failure(`predicate did not match`, stream)
+        return new Failure(`fail: ${pred.description(value)}`, stream)
     })
 }
 
@@ -18,7 +27,10 @@ const where = (pred: (val: any) => boolean): Parser => {
   * Match a char.
   */
 const char = (c: string): Parser => {
-    return where(x => x === c)
+    return where({
+        run: x => x === c,
+        description: x => `match ${c} to ${x}`
+    })
 }
 
 /**
@@ -127,7 +139,9 @@ const not = (parser: Parser): Parser =>
             (value, s) =>
                 stream.size() > 0
                     ? new Success(stream.head(), stream.move(1))
-                    : new Failure('unexpected end', stream)))
+                    : new Failure('unexpected end', stream)
+            )
+        )
 
 /**
   * Parse the parser and ignore the two parser results 'around' it.

@@ -20,6 +20,10 @@ class Stream {
         return this.iterable[this.cursor]
     }
 
+    public toString(): string {
+        return this.iterable.slice(this.cursor)
+    }
+
     /**
       * Get the size of the (remaining) stream.
       */

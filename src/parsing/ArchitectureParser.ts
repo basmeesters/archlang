@@ -5,10 +5,15 @@
 class ArchitectureParser {
     public static parseGraph(input: string) {
         const stream = new Stream(input)
-        return ArchitectureParser.parseArchitecture.run(stream).fold(
-                v => v,
-                e => e
+        const result = ArchitectureParser.parseArchitecture.run(stream)
+        if (result.rest.size() > 0) {
+            return new Failure(
+                `fail, not all text was parsed: ${result.rest.toString()}`,
+                result.rest
             )
+        } else {
+            return result
+        }
     }
 
     private static parseId: Parser =

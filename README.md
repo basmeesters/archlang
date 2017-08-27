@@ -36,7 +36,7 @@ TODO
     - ~~Break long lines in descriptions.~~
     - ~~Clusters to enable grouping.~~
     - ~~Interactive hiding / showing of clusters.~~
-* [ ] A small language to describe the graph-like structure, that gets
+* [x] A small language to describe the graph-like structure, that gets
       interpreted and visualized.
     - ~~Interpret components (nodes).~~
     - ~~Interpret connectors (edges).~~
@@ -44,8 +44,8 @@ TODO
     - ~~Interpret layout options.~~
     - ~~Work better with insignificant whitespace.~~
     - ~~Allow for comments.~~
-    - Better error messages parsing.
 * [ ] Include & use testing framework.
 * [ ] Add some utility features.
     - import from file.
     - export to pdf / svg / png(?).
+* [ ] Improve error messages of parsing.s

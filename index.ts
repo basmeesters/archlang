@@ -1,4 +1,9 @@
 function start(): void {
-    let graph = ArchitectureParser.parseGraph(exampleInput)
-    new DagreGraph(graph.toJson());
+    const result = ArchitectureParser.parseGraph(exampleInput)
+    if (result instanceof Success) {
+        const graph = result.value as Architecture
+        new DagreGraph(graph.toJson());
+    } else {
+        console.log(result.value)
+    }
 }

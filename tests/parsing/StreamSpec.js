@@ -1,5 +1,5 @@
 const streamSpec = () => {
-    describe("stream", () => {
+    describe("stream class", () => {
         it("creates a new stream from a string", () => {
             const s = stream("some string");
             expect(s).toEqual(jasmine.any(Stream));

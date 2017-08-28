@@ -10,7 +10,7 @@ class Parser {
     /**
       * Run the parser over the strm.
       */
-    public run(strm: Stream) {
+    public run(strm: Stream): Result {
         return this.parse(strm)
     }
 

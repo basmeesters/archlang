@@ -1,4 +1,5 @@
-describe("parsing" , () => {
+describe("parsing package" , () => {
     streamSpec();
+    parserSpec();
     parserCombinatorSpecs();
 })

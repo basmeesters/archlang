@@ -36,7 +36,7 @@ TODO
     - ~~Break long lines in descriptions.~~
     - ~~Clusters to enable grouping.~~
     - ~~Interactive hiding / showing of clusters.~~
-* [x] A small language to describe the graph-like structure, that gets
+* [ ] A small language to describe the graph-like structure, that gets
       interpreted and visualized.
     - ~~Interpret components (nodes).~~
     - ~~Interpret connectors (edges).~~
@@ -44,6 +44,7 @@ TODO
     - ~~Interpret layout options.~~
     - ~~Work better with insignificant whitespace.~~
     - ~~Allow for comments.~~
+    - Use `bimap` and `chain` as proposed in original article.
 * [ ] Include & use testing framework.
 * [ ] Add some utility features.
     - import from file.

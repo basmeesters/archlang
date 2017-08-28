@@ -42,3 +42,5 @@ class Stream {
         )
     }
 }
+
+const stream = (str: string) => new Stream(str)

@@ -4,22 +4,22 @@
   */
 class Parser {
     constructor(
-        private parse: (stream: Stream) => Result
+        private parse: (strm: Stream) => Result
     ) { }
 
     /**
-      * Run the parser over the stream.
+      * Run the parser over the strm.
       */
-    public run(stream: Stream) {
-        return this.parse(stream)
+    public run(strm: Stream) {
+        return this.parse(strm)
     }
 
     /**
       * Map the function given over the result of parsing.
       */
     public map(f: (val: any) => any): Parser {
-        return new Parser(stream =>
-            this.parse(stream).map(f)
+        return new Parser(strm =>
+            this.parse(strm).map(f)
         )
     }
 
@@ -28,8 +28,8 @@ class Parser {
       * parser given as argument.
       */
     public chain(f: (val: any) => Parser): Parser {
-        return new Parser(stream =>
-            this.parse(stream).chain((v, s) => f(v).run(s))
+        return new Parser(strm =>
+            this.parse(strm).chain((v, s) => f(v).run(s))
         )
     }
 
@@ -40,8 +40,8 @@ class Parser {
             success: (val: any, rest: Stream) => any,
             failure: (val: any, rest: Stream) => any
         ): Parser {
-        return new Parser((stream: Stream) =>
-            this.parse(stream).fold(success, failure)
+        return new Parser((strm: Stream) =>
+            this.parse(strm).fold(success, failure)
         )
     }
 }

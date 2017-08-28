@@ -80,7 +80,7 @@ class ArchitectureParser {
         })
 
     private static parseComponents: Parser =
-        zeroOrMoreAndIgnore(ArchitectureParser.parseComponent, whitespace)
+        zeroOrMoreAndIgnore(ArchitectureParser.parseComponent, ignore)
 
     private static parseArrow: Parser =
         between(
@@ -108,7 +108,7 @@ class ArchitectureParser {
         })
 
     private static parseConnectors: Parser =
-        zeroOrMoreAndIgnore(ArchitectureParser.parseConnector, whitespace)
+        zeroOrMoreAndIgnore(ArchitectureParser.parseConnector, ignore)
 
     private static parseCluster: Parser =
         sequence([
@@ -117,7 +117,7 @@ class ArchitectureParser {
             ArchitectureParser.parseId,
             ArchitectureParser.parseColor,
             string("\n"),
-            whitespace,
+            ignore,
             ArchitectureParser.parseComponents,
             ArchitectureParser.parseConnectors,
             string("end\n")
@@ -139,14 +139,14 @@ class ArchitectureParser {
                 ArchitectureParser.parseCluster,
                 ArchitectureParser.parseComponent
             ]),
-            whitespace
+            ignore
         )
 
     private static parseArchitecture: Parser =
         sequence([
-            whitespace,
+            ignore,
             ArchitectureParser.parseClusters,
-            whitespace,
+            ignore,
             ArchitectureParser.parseConnectors
         ]).map(list => {
             const nodes = list[1]

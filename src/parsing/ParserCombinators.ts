@@ -8,18 +8,18 @@ type Predicate = {
 }
 
 /**
-  * Check if a predicate function returns true on the head of the stream given.
+  * Check if a predicate function returns true on the head of the strm given.
   */
 const where = (pred: Predicate): Parser => {
-    return new Parser(stream => {
-        if (stream.size() === 0) {
-            return new Failure('unexpected end', stream)
+    return new Parser(strm => {
+        if (strm.size() === 0) {
+            return new Failure('unexpected end', strm)
         }
-        const value = stream.head()
+        const value = strm.head()
         if (pred.run(value)) {
-            return new Success(value, stream.move(1))
+            return new Success(value, strm.move(1))
         }
-        return new Failure(`fail: ${pred.description(value)}`, stream)
+        return new Failure(`fail: ${pred.description(value)}`, strm)
     })
 }
 
@@ -34,18 +34,23 @@ const char = (c: string): Parser => {
 }
 
 /**
+  * Match a string.
+  */
+const string = (str: string): Parser => sequence(str.split('').map(char));
+
+/**
   * Match any of the parsers given (and return the first that does).
   */
 const either = (list: Array<Parser>): Parser => {
-    return new Parser((stream: Stream) => {
+    return new Parser((strm: Stream) => {
         for (let i = 0; i < list.length; i++) {
             const parser = list[i]
-            const result = parser.run(stream)
+            const result = parser.run(strm)
             if (result instanceof Success) {
                 return result
             }
         }
-        return new Failure('either failed', stream)
+        return new Failure('either failed', strm)
     })
 }
 
@@ -53,14 +58,14 @@ const either = (list: Array<Parser>): Parser => {
   * Always succeed parsing.
   */
 const always = (value: any): Parser =>
-    new Parser((stream: Stream) => new Success(value, stream));
+    new Parser((strm: Stream) => new Success(value, strm));
 
 
 /**
   * Always fail parsing.
   */
 const never = (value: any): Parser =>
-    new Parser((stream: Stream) => new Failure(value, stream));
+    new Parser((strm: Stream) => new Failure(value, strm));
 
 /**
   * Apply each of the parsers in succession and concat the results.
@@ -73,6 +78,8 @@ const append = (p1: Parser, p2: Parser): Parser => {
   * Parse each of the parsers given in sequence and return all results.
   */
 const sequence = (list: Array<Parser>): Parser => {
+    const flatten = (data: Array<Array<any>>): Array<any> =>
+        data.reduce((acc, e) => acc.concat(e), [])
     return list.reduce((acc: Parser, parser: Parser) =>
         append(acc, parser), always([]))
 }
@@ -84,62 +91,41 @@ const sequence = (list: Array<Parser>): Parser => {
 const zeroOrMoreAndIgnore = (parser: Parser, ignore: Parser): Parser =>
     zeroOrMore(sequence([
         parser,
-        whitespace
+        ignore
     ])).map((list) => list.map((l: any, i: number) => l[0]))
 
-/**
-  * Helper function to flatten an array of arrays.
-  */
-const flatten = (data: Array<Array<any>>): Array<any> =>
-    data.reduce((acc, e) => acc.concat(e), [])
-
 const maybe = (parser: Parser): Parser =>
-    new Parser(stream =>
-        parser.run(stream)
+    new Parser(strm =>
+        parser.run(strm)
             .fold(
             (v, s) => new Success(v, s),
-            (v) => new Success(null, stream)))
-
-/**
-  * Give a parse result without consuming anything from the stream.
-  */
-const lookahead = (parser: Parser): Parser =>
-    new Parser((stream: Stream) =>
-        parser.run(stream)
-            .fold(
-            (v) => new Success(v, stream),
-            (v) => new Failure(v, stream)))
+            (v) => new Success(null, strm)))
 
 /**
   * Parse zero or more occurences of the same parser.
   */
 const zeroOrMore = (parser: Parser): Parser =>
-    new Parser((stream: Stream) =>
+    new Parser((strm: Stream) =>
         parser
-            .run(stream)
+            .run(strm)
             .fold(
             (value, s) =>
                 zeroOrMore(parser).map(rest => [value].concat(rest)).run(s),
             (value, s) =>
-                new Success([], stream)));
-
-/**
-  * Match a string.
-  */
-const string = (str: string): Parser => sequence(str.split('').map(char));
+                new Success([], strm)));
 
 /**
   * Succeed if the parser failed and vice-versa.
   */
 const not = (parser: Parser): Parser =>
-    new Parser((stream: Stream) =>
-        parser.run(stream)
+    new Parser((strm: Stream) =>
+        parser.run(strm)
             .fold(
-            (value, s) => new Failure('not failed', stream),
+            (value, s) => new Failure('not failed', strm),
             (value, s) =>
-                stream.size() > 0
-                    ? new Success(stream.head(), stream.move(1))
-                    : new Failure('unexpected end', stream)
+                strm.size() > 0
+                    ? new Success(strm.head(), strm.move(1))
+                    : new Failure('unexpected end', strm)
             )
         )
 
@@ -154,9 +140,11 @@ const space: Parser = string(" ")
 const newLine: Parser = string("\n")
 
 const comment: Parser = between(
-    string("//"),
+    string("// "),
     zeroOrMore(not(string("\n"))),
     string("\n")
-)
+).map(l => l.join(""))
 
-const whitespace: Parser = zeroOrMore(either([space, newLine, comment]))
+const ignore: Parser = zeroOrMore(
+    either([space, newLine, comment])
+).map(l => l.join(""))

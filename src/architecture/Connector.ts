@@ -2,7 +2,7 @@ class Connector {
     constructor(
         public source: string,
         public target: string,
-        public label: string,
+        public description: string,
         public color: Color = Color.DarkGray
     ) { }
 
@@ -12,7 +12,7 @@ class Connector {
             id: id,
             source: this.source,
             target: this.target,
-            description: this.label,
+            description: this.description,
             style: `stroke: ${color}; stroke-width: 1.5px;`,
             arrowHeadStyle: `fill: ${color};`
         }

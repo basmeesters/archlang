@@ -42,7 +42,7 @@ const parserSpec = () => {
 
              const successResult = successParser.run(stream("ab"));
              const failResult = failParser.run(stream("ab"));
-             console.log(failResult)
+
              expect(successResult).toEqual("A");
              expect(failResult).toEqual("FAIL");
          });

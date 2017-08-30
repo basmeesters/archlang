@@ -28,30 +28,56 @@ Test
 Testing can be done similarly to running the code. Simply follow the
 instructions from _Run_ above and paste `/tests/spec.html` behind the URL.
 
-TODO
-----
+Features
+--------
 
-* [x] Setup a TypeScript environment.
-* [x] Provide all the building blocks for drawing a graph:
-    - ~~Nodes with a title & description.~~
-    - ~~Edges with a description.~~
-    - ~~Zooming and panning of the visualization.~~
-    - ~~Various styles for both nodes and edges to distinguish various types
-      of blocks.~~
-    - ~~Break long lines in descriptions.~~
-    - ~~Clusters to enable grouping.~~
-    - ~~Interactive hiding / showing of clusters.~~
-* [ ] A small language to describe the graph-like structure, that gets
-      interpreted and visualized.
-    - ~~Interpret components (nodes).~~
-    - ~~Interpret connectors (edges).~~
-    - ~~Interpret clusters.~~
-    - ~~Interpret layout options.~~
-    - ~~Work better with insignificant whitespace.~~
-    - ~~Allow for comments.~~
-    - Use `bimap` and `chain` as proposed in original article.
-* [x] Include & use testing framework.
-* [ ] Add some utility features.
-    - import from file.
-    - export to pdf / svg / png(?).
-* [ ] Improve error messages of parsing.s
+Currently _ArchLang_ provides two features; the ability to interpret some
+graph-like description, and a way to visualize it.
+
+The language supported can interpret components (nodes), connectors(edges), and
+clusters of nodes:
+
+* Components:
+  ```
+  n1 "title" "description
+  ```
+
+* Connectors:
+  ```
+  n1 --"some description"--> n2
+  ```
+
+* Comments:
+  ```
+  // Archlang uses C-style comments.
+  ```
+
+* Clusters:
+  ```
+  cluster c1
+  ... // nodes and edges
+  end
+  ```
+
+*  Parse and ignore insignificant whitespace for readability:
+   ```
+   n1 "some node" "some description"
+
+   cluster c1
+       n2 "another node" ""
+   end
+
+   n1 --""--> c1
+   ```
+
+* Layout styles for nodes, edges, and clusters:
+  ```
+  // A blue, rectangle shaped cluster node
+  |cluster| c1 blue
+
+     (n1) "node" "with circular shape and red color" red
+     |n2| "node2" "rectanle and gray" gray
+
+     n1 --"dark grey connector"--> n2 dark-gray
+  end
+  ```

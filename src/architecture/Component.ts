@@ -1,3 +1,8 @@
+/**
+  * Component (or node) present in an architecture. Each component potentially
+  * also contains a 'sub-architecture'. Currently only one level of nesting
+  * is supported in the parser.
+  */
 class Component {
     constructor(
         public id: string,
@@ -14,7 +19,7 @@ class Component {
             title: this.title,
             description: this.description,
             shape: this.shapeToJson(this.shape),
-            style: `fill: ${Component.colorToJson(this.color)}`,
+            style: `fill: ${colorToJson(this.color)}`,
             children: this.children ? this.children.toJson() : undefined
         }
     }
@@ -25,19 +30,6 @@ class Component {
                 return "ellipse";
             case Shape.Rect:
                 return "rect";
-        }
-    }
-
-    public static colorToJson(color: Color): string {
-        switch(color) {
-            case Color.Gray:
-                return "rgb(230, 230, 230);";
-            case Color.LightBlue:
-                return "rgb(210, 210, 255);";
-            case Color.Red:
-                return "rgb(255, 210, 210);";
-            case Color.DarkGray:
-                return "rgb(153, 153, 153);"
         }
     }
 }

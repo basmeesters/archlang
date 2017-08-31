@@ -19,6 +19,10 @@ text {
     fill: none;
 }
 
+.person {
+    fill: red;
+}
+
 text {
     font-weight: 300;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;

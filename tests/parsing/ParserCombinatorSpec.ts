@@ -4,8 +4,8 @@ const parserCombinatorSpecs = () => {
             it("returns a 'Success' object when the predicate matches", () => {
                 const c = "a";
                 const pred = {
-                    run: (x) => x === c,
-                    description: (x) => ""
+                    run: (x: string) => x === c,
+                    description: (x: any) => ""
                 };
                 const result = where(pred).run(stream(c));
                 expect(result).toEqual(jasmine.any(Success));
@@ -14,8 +14,8 @@ const parserCombinatorSpecs = () => {
 
             it("returns a 'Failure' object when the predicate fails", () => {
                 const pred = {
-                    run: (x) => x === "a",
-                    description: (x) => "did not match"
+                    run: (x: string) => x === "a",
+                    description: (x: any) => "did not match"
                 };
                 const result = where(pred).run(stream("b"));
                 expect(result).toEqual(jasmine.any(Failure));

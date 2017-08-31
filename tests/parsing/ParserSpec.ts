@@ -1,12 +1,12 @@
 const createParser = () => {
-    const f = (strm) => new Success(strm.head(), strm.move(1));
+    const f = (strm: Stream) => new Success(strm.head(), strm.move(1));
     return new Parser(f);
 }
 
 const parserSpec = () => {
     describe("parser class", () => {
         it("is created by proving a stream to result function", () => {
-            const f = (strm) => new Success(strm.head(), strm.move(1));
+            const f = (strm: Stream) => new Success(strm.head(), strm.move(1));
             const p = new Parser(f);
             expect(p).toEqual(jasmine.any(Parser));
         });
@@ -34,10 +34,10 @@ const parserSpec = () => {
 
         it("fold(s, f) invokes run and executes the correct " +
            "result function", () => {
-             const func = (v, s) => v.toUpperCase();
+             const func = (v: any, s: any) => v.toUpperCase();
              const successParser = createParser().fold(func, func);
 
-             const f = strm => new Failure('fail', strm);
+             const f = (strm: Stream) => new Failure('fail', strm);
              const failParser = new Parser(f).fold(func, func);
 
              const successResult = successParser.run(stream("ab"));

@@ -1,4 +1,4 @@
-const createArch = (input) => {
+const createArch = (input: string) => {
     const result = ArchitectureParser.parseGraph(input)
     expect(result).toEqual(jasmine.any(Success))
     return result.value

@@ -4,7 +4,7 @@ class DagreGraph {
 
     constructor(jsonGraph: JsonGraph) {
         this.graph = new dagreD3.graphlib.Graph({
-            compound:true,
+            compound: true,
             multigraph: true
         }).setGraph({});
         this.graph.graph().transition = (selection: any) => {
@@ -25,10 +25,39 @@ class DagreGraph {
         }
     }
 
+    private changeShape(parent: any, bbox: any, node: any) {
+        var w = bbox.width,
+            h = bbox.height,
+            points = [
+                { x: 0, y: 0 },
+                { x: w, y: 0 },
+                { x: w, y: -h },
+                { x: w / 2, y: -h * 3 / 2 },
+                { x: 0, y: -h }
+            ],
+            // shapeSvg = parent.insert("polygon", ":first-child")
+            //     .attr("points", points.map(function(d) { return d.x + "," + d.y; }).join(" "))
+            //     .attr("transform", "translate(" + (-w / 2) + "," + (h * 3 / 4) + ")"),
+            shapeSvg2 = parent.insert("image", ":first-child")
+                .attr("xlink:href", "../../user.svg")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", w)
+                .attr("height", h)
+                .attr("transform", "translate(" + (-w / 2) + "," + (-h * 3 / 4) + ")")
+
+        node.intersect = function(point: any) {
+            return dagreD3.intersect.rect(node, point);
+        };
+
+        return shapeSvg2;
+    };
+
     private render() {
         let render = new dagreD3.render();
+        render.shapes().house = this.changeShape;
         var svg = d3.select("svg"),
-                svgGroup = svg.append("g");
+            svgGroup = svg.append("g");
         svg.attr('width', window.innerWidth * 1);
         svg.attr('height', window.innerHeight * 1);
         render(d3.select("svg g"), this.graph);
@@ -75,10 +104,10 @@ class DagreGraph {
     }
 
     private focusOnLocation(svg: any,
-                            zoom: any,
-                            x: number,
-                            y: number,
-                            scale: number): void {
+        zoom: any,
+        x: number,
+        y: number,
+        scale: number): void {
         // transform both the svg and the zoom for it to work properly
         svg.select('g').transition().duration(500).attr(
             "transform", `scale(${scale}), translate(${-x},${-y})`);
@@ -110,21 +139,21 @@ class DagreGraph {
     }
 
     private update(svg: any) {
-            svg.selectAll('g.node')
-                .on('click', (node_id: string) => {
+        svg.selectAll('g.node')
+            .on('click', (node_id: string) => {
 
-                    // a bit dirty, but check if a node has children OR is is expanded
-                    if(this.graph.node(node_id).children ||
-                       this.graph.node(node_id).collapsible) {
-                        if(!this.graph.node(node_id).collapsible)
-                            this.expand(node_id, svg);
-                        else
-                            this.collapse(node_id, svg);
-                    }
-                    else {
-                        console.log('no children');
-                    }
+                // a bit dirty, but check if a node has children OR is is expanded
+                if (this.graph.node(node_id).children ||
+                    this.graph.node(node_id).collapsible) {
+                    if (!this.graph.node(node_id).collapsible)
+                        this.expand(node_id, svg);
+                    else
+                        this.collapse(node_id, svg);
                 }
+                else {
+                    console.log('no children');
+                }
+            }
             );
     }
     private expand(node_id: string, svg: any) {
@@ -135,7 +164,7 @@ class DagreGraph {
             children = g.node(node_id).children;
 
         let oldEdges = in_edges.map((i: number, index: number) => {
-            return {edge: in_edges[index], value: g.edge(i)}
+            return { edge: in_edges[index], value: g.edge(i) }
         })
         add_children();
         remove_edges();
@@ -144,35 +173,35 @@ class DagreGraph {
         this.render()
 
         function add_children() {
-            for(let i=0; i < children.nodes.length; i++) {
+            for (let i = 0; i < children.nodes.length; i++) {
                 obj.addNode(children.nodes[i])
             }
 
-            for(let i=0; i < children.edges.length; i++) {
+            for (let i = 0; i < children.edges.length; i++) {
                 obj.addEdge(children.edges[i])
             }
             return g
         }
 
         function remove_edges() {
-            for (var i=0; i < in_edges.length; i++) {
+            for (var i = 0; i < in_edges.length; i++) {
                 let value = g.edge(in_edges[i])
                 g.removeEdge(in_edges[i]);
             }
 
-            for (var i=0; i < out_edges.length; i++) {
+            for (var i = 0; i < out_edges.length; i++) {
                 g.removeEdge(out_edges[i]);
             }
             return g
         }
 
         function new_edges() {
-            for(let i=0; i < oldEdges.length; i++) {
+            for (let i = 0; i < oldEdges.length; i++) {
                 g.setEdge(oldEdges[i].edge.v, children.nodes[0].id, oldEdges[i].value)
             }
 
-            for(let i=0; i < out_edges.length; i++) {
-                g.setEdge(children.nodes[children.nodes.length -1].id, out_edges[i].w, {})
+            for (let i = 0; i < out_edges.length; i++) {
+                g.setEdge(children.nodes[children.nodes.length - 1].id, out_edges[i].w, {})
             }
         }
 
@@ -182,7 +211,7 @@ class DagreGraph {
             g.node(children.nodes[0].id).deleted_in_edges = oldEdges;
             g.node(children.nodes[0].id).deleted_out_edges = out_edges;
 
-            for(let i=0; i < children.nodes.length; i++) {
+            for (let i = 0; i < children.nodes.length; i++) {
                 g.setParent(children.nodes[i].id, node_id)
             }
         }
@@ -193,14 +222,14 @@ class DagreGraph {
         var node = g.node(node_id),
             parent = g.parent(node_id);
 
-        for(var i =0; i < node.children.nodes.length; i++) {
+        for (var i = 0; i < node.children.nodes.length; i++) {
             g.removeNode(node.children.nodes[i].id);
         }
-        for(var i =0; i < node.deleted_in_edges.length; i++) {
+        for (var i = 0; i < node.deleted_in_edges.length; i++) {
             g.setEdge(node.deleted_in_edges[i].edge.v, parent, node.deleted_in_edges[i].value);
         }
 
-        for(var i =0; i < node.deleted_out_edges.length; i++) {
+        for (var i = 0; i < node.deleted_out_edges.length; i++) {
             g.setEdge(parent, node.deleted_out_edges[i].w);
         }
         this.render();

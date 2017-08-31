@@ -1,3 +1,6 @@
+/**
+  * JSON structure that is used as input for the drawing of the graph.
+  */
 type JsonGraph = {
     nodes: Array<JsonNode>,
     edges: Array<JsonEdge>
@@ -21,6 +24,7 @@ type JsonEdge = {
     arrowHeadStyle: string
 }
 
+// Declarations to provide some expression of intent.
 declare let dagreD3: any;
 declare let d3: any;
 declare let dagreGraph: any;

@@ -5,8 +5,8 @@ class Renderer {
         let render = new dagreD3.render();
         var svg = d3.select("svg"),
             svgGroup = svg.append("g");
-        svg.attr('width', window.innerWidth * 1);
-        svg.attr('height', window.innerHeight * 1);
+        svg.attr('width', window.innerWidth - 50);
+        svg.attr('height', window.innerHeight - 50);
         render(d3.select("svg g"), graph);
         this.setZoomBehavior(svg, graph.graph())
         updateFunction(svg)
@@ -34,8 +34,8 @@ class Renderer {
     }
 
     private scaleVisualization(svg: any, zoom: any, renderedGraph: any) {
-        const xScale = svg.attr('width') / renderedGraph.width * 1;
-        const yScale = svg.attr('height') / renderedGraph.height * 1;
+        const xScale = svg.attr('width') / renderedGraph.width;
+        const yScale = svg.attr('height') / renderedGraph.height;
         const newScale = Math.min(xScale, yScale, 1);
 
         this.focusOnLocation(svg, zoom, -150, -150, newScale);

@@ -7,6 +7,7 @@ function start(): void {
             errors.forEach(e => console.log(e))
         } else {
             new DagreGraph(graph.toJson());
+            new ImageExporter()
         }
     } else {
         console.log(result.value)

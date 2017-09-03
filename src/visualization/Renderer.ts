@@ -5,8 +5,8 @@ class Renderer {
         let render = new dagreD3.render();
         var svg = d3.select("svg"),
             svgGroup = svg.append("g");
-        svg.attr('width', window.innerWidth - 50);
-        svg.attr('height', window.innerHeight - 50);
+        svg.attr('width', window.innerWidth - 100);
+        svg.attr('height', window.innerHeight - 100);
         render(d3.select("svg g"), graph);
         this.setZoomBehavior(svg, graph.graph())
         updateFunction(svg)

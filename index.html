@@ -38,7 +38,21 @@
         <script src="dist/index.js"></script>
     </head>
     <body onload="start()">
-        <button id='export'>Export visualization</button>
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Navigation. We hide it in small screens. -->
+          <nav class="mdl-navigation mdl-layout">
+            <button id='export'
+                    class="mdl-button mdl-js-button">
+                    Export
+            </button>
+          </nav>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
         <svg id="graph"></svg>
+      </main>
     </body>
 </html>

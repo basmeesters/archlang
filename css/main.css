@@ -29,3 +29,16 @@ text {
     font-size: 14px;
     display: block;
 }
+
+button {
+    color: white !important;
+}
+
+header, nav {
+    max-height:50px !important;
+    min-height: 50px !important;
+}
+
+.mdl-layout__header-row {
+    height: 50px !important;
+}

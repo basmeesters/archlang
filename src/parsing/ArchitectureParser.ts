@@ -133,30 +133,24 @@ class ArchitectureParser {
     /**
       * Example:
       *
-      * (cluster) c1  blue
+      * cluster c1 "cluster" "description" blue
       *  ...
       *  end
       */
     private static parseCluster: Parser =
         sequence([
-            ArchitectureParser.parseShapeAndParser(string("cluster")),
-            string(" "),
-            ArchitectureParser.parseId,
-            ArchitectureParser.parseColor,
-            string("\n"),
+            string("cluster "),
+            ArchitectureParser.parseComponent,
             ignore,
             ArchitectureParser.parseComponents,
             ArchitectureParser.parseConnectors,
             string("end\n")
         ]).map(list => {
-            const id = list[2].join("")
-            const title = id
-            const description = ""
-            const shape = list[0][1]
-            const color = list[3] ? list[3] : Color.Gray
-            const architecture = new Architecture(list[6], list[7])
+            const component = list[1]
+            const architecture = new Architecture(list[3], list[4])
 
-            return new Component(id, title, description, shape, color,
+            return new Component(component.id, component.title,
+                component.description, component.shape, component.color,
                 architecture)
         })
 

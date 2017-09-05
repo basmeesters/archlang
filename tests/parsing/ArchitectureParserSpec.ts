@@ -94,14 +94,14 @@ const architectureParserSpec = () => {
         describe("clusters", () => {
             it("can parse an empty cluster", () => {
                 const desc = `
-                    cluster cl1
+                    cluster |cl1| "cluster" "cl description"
                     end
                 `;
                 const a = createArch(desc);
                 expect(a.components.length).toEqual(1);
-                expect(a.components[0].id).toEqual("cl1")
-                expect(a.components[0].title).toEqual("cl1")
-                expect(a.components[0].description).toEqual("")
+                expect(a.components[0].id).toEqual("cl1");
+                expect(a.components[0].title).toEqual("cluster");
+                expect(a.components[0].description).toEqual("cl description")
 
                 const children = a.components[0].children;
                 expect(children).toEqual(jasmine.any(Architecture));
@@ -112,7 +112,7 @@ const architectureParserSpec = () => {
             it("can parse a cluster with various components " +
                "and connectors", () => {
                 const desc = `
-                    (cluster) c1 dark-grey
+                    cluster (c1) "title" "" dark-grey
                         c1 "title1" ""
                         c2 "title2" "description" red
                         c1 --""--> c2 blue
@@ -140,7 +140,7 @@ const architectureParserSpec = () => {
                 const desc = `
                     c1 "some component" "with description"
                     // a cluster
-                    (cluster) cl1 blue
+                    cluster |cl1| "cl1" "" blue
                         (c2) "title1" ""
                         |c3| "title2" "description" red
                         c1 --""--> c2 gray

@@ -14,7 +14,7 @@ class Gui {
                 const input = $(this).text();
                 const id = `graph-${counter}`
                 $($(this).parent()).replaceWith(obj.htmlTemplate(counter));
-                obj.createArchitecture(window.innerWidth, 250, id, input)
+                obj.createArchitecture(window.innerWidth, 500, id, input)
                 counter += 1;
             }
         })

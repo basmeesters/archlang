@@ -7,12 +7,13 @@ class ClusterManager {
     public expand(
         nodeId: string,
         addNodeFunction: (node: JsonNode) => void,
-        addEdgeFunction: (edge: JsonEdge) => void): void {
-
+        addEdgeFunction: (edge: JsonEdge) => void
+    ): void {
         const inEdges = this.graph.inEdges(nodeId);
         const outEdges = this.graph.outEdges(nodeId);
         const children = this.graph.node(nodeId).children;
 
+        this.setExpandDescription(nodeId);
         this.addNodesAndEdges(children, addNodeFunction, addEdgeFunction);
         this.setParent(nodeId, children, inEdges, outEdges);
         this.removeClusterEdges(inEdges.concat(outEdges));
@@ -33,6 +34,19 @@ class ClusterManager {
         for (const edge of node.deleted_out_edges) {
             this.graph.setEdge(parent, edge.edge.v, edge.value);
         }
+        this.setCollapseDescription(parent)
+    }
+
+    private setExpandDescription(nodeId: string) {
+        const node = this.graph.node(nodeId)
+        node.oldLabel = node.label
+        node.clusterLabelPos = 'top'
+        node.label = `<b>${node.title}</b>`;
+    }
+
+    private setCollapseDescription(nodeId: string) {
+        const node = this.graph.node(nodeId)
+        node.label = node.oldLabel;
     }
 
     private addNodesAndEdges(

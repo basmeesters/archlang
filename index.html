@@ -41,25 +41,59 @@
 
     </head>
     <body onload="startAll()">
-          <pre><code class="language-arch">
-            // Example graph
-            (n0) "User" "" red
-            cluster |c1| "cluster" "description" gray
-                // Fat money componet yo
-                n1 "Money component" "this component is able to
-                                      process money. So just it keeps
-                                      track of all the money you throw
-                                      in and you get the right change" blue
-                n2 "Buttons" "" blue
-                (n3) "Coffee maker" "" blue
+      <pre><code class="language-arch">
+        // You can use C-style comments to annotate the description
 
-                n0 --"Throw in money"--> n1
-                n0 --"communicates with the coffee machine"--> n2 red
-                n1 --"signales if there is enough money"--> n2
-                n2 --"signales choice & money amount"--> n3 blue
-            end
+        // You can create a clusters with a shape, id, title, and description
+        // This will create a blue rectangle.
+        cluster |c1| "Parsing" "everything needed to parse a description" blue
 
-            n0 --"interact with the machine"--> c1 blue
-          </code></pre>
+            // Every node also has a shape, id, title, and description.
+            // Each of these will create a ellipse node (in gray by default).
+            (p1) "Parser combinators" "helper functions to parse text"
+            (p2) "Architecture parser" "specific parser to parse Archlang's DSL"
+            (p3) "Parser" "object containing a parse function and methods to
+                  chain the results"
+            (p4) "Stream" "immutable array wrapper"
+            (p5) "Result" "Success or Failure containg a value and a rest
+                           stream"
+
+            // Edges are created using a source and target node and a
+            // description (which may be empty).
+            p3 --"contains a"--> p4
+            p3 --"produces a"--> p5
+            p1 --"uses multiple"--> p2
+            p2 --"each produces a single"--> p3
+            p5 --"has a rest"--> p4
+        end
+
+        cluster |c2| "Architecture" "structure representing the text description
+                      at runtime" blue
+            (a1) "Component" "Node with an id, title, description, shape, and
+                  color"
+            (a2) "Connector" "Connects two components, possibly has a label and
+                  color"
+            (a3) "Architecture" "Overarching object consisting of components and
+                  connectors"
+
+            a3 --"contains multiple"--> a1
+            a3 --"contains multiple"--> a2
+        end
+
+        // When no shape is given it will default to a rectangle.
+        cluster c3 "Visualization" "visualizes the runtime architecture using
+                    Dagre-d3" blue
+            (v1) "DagreGraph" "wrapper around dagre-d3 functionality"
+            (v2) "ClusterManager" "manages expanding and collapsing of
+                  components with sub-architectures"
+            (v3) "Renderer" "renders and updates the visualization"
+
+            v1 --"uses"--> v2
+            v1 --"uses"--> v3
+        end
+
+        c1 --"results in"--> c2
+        c2 --"is used as input for"--> c3
+      </code></pre>
     </body>
 </html>

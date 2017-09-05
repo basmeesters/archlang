@@ -55,6 +55,8 @@ class DagreGraph {
     private addNode = (node: JsonNode): void => {
         const description = node.description ? node.description : ""
         const value = {
+            title: node.title,
+            description: node.description,
             label: `<b>${node.title}</b><br/> ${this.breakLine(description)}`,
             labelType: "html",
             style: node.style,

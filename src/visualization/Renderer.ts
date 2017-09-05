@@ -1,3 +1,7 @@
+/**
+  * Object that actually does the rendering, zooming and panning of the given
+  * graph.
+  */
 class Renderer {
     constructor(
         private width: number,

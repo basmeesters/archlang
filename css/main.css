@@ -46,3 +46,7 @@ header, nav {
 .mdl-layout__header-row {
     height: 50px !important;
 }
+
+.demo-card-wide.mdl-card {
+  width: 512px;
+}

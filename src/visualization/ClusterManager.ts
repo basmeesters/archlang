@@ -1,3 +1,6 @@
+/**
+  * Object able to expand and collapse a cluster in new nodes and edges.
+  */
 class ClusterManager {
     constructor(private graph: any) { }
 

@@ -1,7 +1,7 @@
 /**
   * Architecture object that contains components and connectors connecting them.
-  * This object provides means to translate the object structure to JSON so it
-  * can be visualized and function to validate the structure.
+  * This object provides means to validate the structure and translate the
+  * object structure to JSON so it can be visualized.
   */
 class Architecture {
     constructor(

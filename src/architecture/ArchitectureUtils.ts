@@ -17,7 +17,7 @@ enum Color {
 }
 
 /**
-  * Convinience method to create an actual color from a Color enum.
+  * Convenience method to create an actual color from a Color enum.
   */
 const colorToJson = (color: Color): string => {
     switch(color) {

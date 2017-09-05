@@ -1,28 +1,32 @@
 declare let saveAs: any // FileSaver.js function
 declare let unescape: any
 
+/**
+  * Object that helps generate a PNG from the visualized structure and means
+  * to download this PNG.
+  */
 class ImageExporter {
-    constructor() {
+    constructor(private svgId: string) {
         this.setUpSaveButton()
     }
 
     private setUpSaveButton(): void {
         const obj = this;
-        d3.select('#export').on('click', function(){
-            const svg = d3.select("#graph")
-            const svgString = obj.getSVGString(svg.node());
-            obj.svgString2Image(svgString, svg.node(), obj.save);
+        d3.select(`#${this.svgId}-export`).on('click', function(){
+            const svg = d3.select(`#${obj.svgId}`)
+            const svgString = obj.svgToString(svg.node());
+            obj.svgStringToImage(svgString, svg.node(), obj.save);
         });
     }
 
     private save(dataBlob: any, filesize: any): void {
-        saveAs( dataBlob, 'architecture.png' );
+        saveAs(dataBlob, 'architecture.png');
     }
 
-    private getSVGString(svgNode: SVGSVGElement): string {
+    private svgToString(svgNode: SVGSVGElement): string {
         svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
         const cssStyleText = this.getCSSStyles(svgNode);
-        this.appendCSS( cssStyleText, svgNode );
+        this.appendCssToSvg( cssStyleText, svgNode );
 
         const serializer = new XMLSerializer();
         const svgString = serializer.serializeToString(svgNode);
@@ -31,8 +35,9 @@ class ImageExporter {
     }
 
     private getCSSStyles(parentElement: SVGSVGElement): string {
-        var extractedCSSText = "";
+        let extractedCSSText = "";
         const stylesheets = document.styleSheets as any;
+
         for (const stylesheet of stylesheets)
             for (const rule of stylesheet.cssRules)
                 extractedCSSText += rule.cssText;
@@ -40,18 +45,19 @@ class ImageExporter {
         return extractedCSSText;
     }
 
-    private appendCSS(cssText: string, element: SVGSVGElement): void {
+    private appendCssToSvg(cssText: string, svgNode: SVGSVGElement): void {
         const styleElement = document.createElement("style");
         styleElement.setAttribute("type","text/css");
         styleElement.innerHTML = cssText;
-        const refNode = element.hasChildNodes() ? element.children[0] : null;
-        element.insertBefore(styleElement, refNode);
+        const refNode = svgNode.hasChildNodes() ? svgNode.children[0] : null;
+        svgNode.insertBefore(styleElement, refNode);
     }
 
-    private svgString2Image(
+    private svgStringToImage(
         svgString: string,
         svg: SVGSVGElement,
-        callback: any): void {
+        callback: any
+    ): void {
 
         const width = svg.getBBox().width;
         const height = svg.getBBox().height;

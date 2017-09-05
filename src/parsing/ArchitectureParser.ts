@@ -16,6 +16,9 @@ class ArchitectureParser {
         }
     }
 
+    /**
+      * Example: n1
+      */
     private static parseId: Parser =
         zeroOrMore(
             not(
@@ -29,6 +32,9 @@ class ArchitectureParser {
             )
         )
 
+    /**
+      * Example: "some description"
+      */
     private static parseDescription: Parser =
         between(
             char('"'),
@@ -36,6 +42,9 @@ class ArchitectureParser {
             char('"'),
         )
 
+    /**
+      * |<parser>| or (<parser>) where <parser> can be any parser.
+      */
     private static parseShapeAndParser(parser: Parser): Parser {
         return either([
             between(string("|"), parser, string("|")).map(l =>
@@ -48,6 +57,9 @@ class ArchitectureParser {
         ])
     }
 
+    /**
+      * Succeeds when parsing one of the available colors or nothing.
+      */
     private static parseColor: Parser =
         maybe(
             sequence([
@@ -61,6 +73,9 @@ class ArchitectureParser {
             ]).map(l => l[1])
         )
 
+    /**
+      * Example: (n1) "some title" "some description" blue\n
+      */
     private static parseComponent: Parser =
         sequence([
             ArchitectureParser.parseShapeAndParser(ArchitectureParser.parseId),
@@ -82,6 +97,9 @@ class ArchitectureParser {
     private static parseComponents: Parser =
         zeroOrMoreAndIgnore(ArchitectureParser.parseComponent, ignore)
 
+    /**
+      * Example: --"some label"-->
+      */
     private static parseArrow: Parser =
         between(
             string("--"),
@@ -89,7 +107,9 @@ class ArchitectureParser {
             string("-->")
         )
 
-
+    /**
+      * Example: n1 --"label"--> n2 red
+      */
     private static parseConnector: Parser =
         sequence([
             ArchitectureParser.parseId,
@@ -110,6 +130,13 @@ class ArchitectureParser {
     private static parseConnectors: Parser =
         zeroOrMoreAndIgnore(ArchitectureParser.parseConnector, ignore)
 
+    /**
+      * Example:
+      *
+      * (cluster) c1  blue
+      *  ...
+      *  end
+      */
     private static parseCluster: Parser =
         sequence([
             ArchitectureParser.parseShapeAndParser(string("cluster")),

@@ -23,7 +23,7 @@ class DagreGraph {
         this.renderer.render(this.graph, this.update);
     }
 
-    public createGraphFromJson(jsonGraph: JsonGraph) {
+    public createGraphFromJson(jsonGraph: JsonGraph): void {
         let clusters = []
         for (let node of jsonGraph.nodes) {
             this.addNode(node);
@@ -35,8 +35,8 @@ class DagreGraph {
     }
 
     private breakLine(text: string): string {
-        let trimmed =  text.replace(/ +(?= )/g,'');
-        let words = trimmed.split(" ");
+        const trimmed =  text.replace(/ +(?= )/g,'');
+        const words = trimmed.split(" ");
 
         let lineLength = 0;
         let newText = ""
@@ -53,8 +53,8 @@ class DagreGraph {
     }
 
     private addNode = (node: JsonNode): void => {
-        let description = node.description ? node.description : ""
-        let value = {
+        const description = node.description ? node.description : ""
+        const value = {
             label: `<b>${node.title}</b><br/> ${this.breakLine(description)}`,
             labelType: "html",
             style: node.style,
@@ -66,7 +66,7 @@ class DagreGraph {
     }
 
     private addEdge = (edge: JsonEdge) => {
-        let value = {
+        const value = {
             label: edge.description,
             lineInterpolate: 'basis',
             style: edge.style,
@@ -79,7 +79,8 @@ class DagreGraph {
         svg.selectAll(`#${this.svgId} g.node`)
             .on('click', (nodeId: string) => {
 
-                // a bit dirty, but check if a node has children OR is is expanded
+                // a bit dirty, but check if a node has children OR is is
+                // expanded
                 if (this.graph.node(nodeId).children ||
                     this.graph.node(nodeId).collapsible) {
                     if (!this.graph.node(nodeId).collapsible)

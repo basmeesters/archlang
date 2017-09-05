@@ -8,6 +8,10 @@ text {
   font-size: 14px;
 }
 
+pre {
+    text-align: left;
+}
+
 .node rect, .node ellipse {
   stroke: #999;
   fill: #fff;

@@ -1,15 +1,19 @@
 class Renderer {
-    constructor() { }
+    constructor(
+        private width: number,
+        private height: number,
+        private svgId: string
+    ) { }
 
-    public render(graph: any, updateFunction: any) {
+    public render(graph: any, update: any) {
         let render = new dagreD3.render();
-        var svg = d3.select("svg"),
+        var svg = d3.select(`#${this.svgId}`),
             svgGroup = svg.append("g");
-        svg.attr('width', window.innerWidth - 100);
-        svg.attr('height', window.innerHeight - 100);
-        render(d3.select("svg g"), graph);
+        svg.attr('width', this.width);
+        svg.attr('height', this.height);
+        render(d3.select(`#${this.svgId} g`), graph);
         this.setZoomBehavior(svg, graph.graph())
-        updateFunction(svg)
+        update(svg)
     }
 
     /**

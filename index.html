@@ -11,6 +11,7 @@
         <script src="lib/canvas-to-blob.js"></script>
         <script src="lib/FileSaver.min.js"></script>
         <script src="lib/material.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         <!-- D3 -->
         <script src="lib/d3.min.js"></script>
@@ -34,25 +35,50 @@
         <script src="dist/src/visualization/DagreGraph.js"></script>
         <script src="dist/src/visualization/ImageExporter.js"></script>
 
-        <script src="dist/src/example.js"></script>
+        <script src="dist/src/Gui.js"></script>
         <script src="dist/index.js"></script>
+
     </head>
-    <body onload="start()">
-    <!-- Always shows a header, even in smaller screens. -->
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
-          <!-- Navigation. We hide it in small screens. -->
-          <nav class="mdl-navigation mdl-layout">
-            <button id='export'
-                    class="mdl-button mdl-js-button">
-                    Export
-            </button>
-          </nav>
-        </div>
-      </header>
-      <main class="mdl-layout__content">
-        <svg id="graph"></svg>
-      </main>
+    <body onload="startAll()">
+          <pre><code class="language-arch">
+            // Example graph
+            (n0) "User" "" red
+            |cluster| t1 gray
+                // Fat money componet yo
+                n1 "Money component" "this component is able to
+                                      process money. So just it keeps
+                                      track of all the money you throw
+                                      in and you get the right change" blue
+                n2 "Buttons" "" blue
+                (n3) "Coffee maker" "" blue
+
+                n0 --"Throw in money"--> n1
+                n0 --"communicates with the coffee machine"--> n2 red
+                n1 --"signales if there is enough money"--> n2
+                n2 --"signales choice & money amount"--> n3 blue
+            end
+
+            n0 --"interact with the machine"--> t1 blue
+          </code></pre>
+          <pre><code class="language-arch">
+            // Example graph
+            (n0) "User" "" red
+            |cluster| t1 gray
+                // Fat money componet yo
+                n1 "Money component" "this component is able to
+                                      process money. So just it keeps
+                                      track of all the money you throw
+                                      in and you get the right change" blue
+                n2 "Buttons" "" blue
+                (n3) "Coffee maker" "" blue
+
+                n0 --"Throw in money"--> n1
+                n0 --"communicates with the coffee machine"--> n2 red
+                n1 --"signales if there is enough money"--> n2
+                n2 --"signales choice & money amount"--> n3 blue
+            end
+
+            n0 --"interact with the machine"--> t1 blue
+          </code></pre>
     </body>
 </html>

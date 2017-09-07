@@ -48,5 +48,5 @@ header, nav {
 }
 
 .demo-card-wide.mdl-card {
-  width: 512px;
+  width: 100%;
 }

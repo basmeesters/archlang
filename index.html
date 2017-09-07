@@ -65,19 +65,21 @@
             p1 --"uses multiple"--> p2
             p2 --"each produces a single"--> p3
             p5 --"has a rest"--> p4
+            p5 --"is fed to"--> c2
         end
 
         cluster |c2| "Architecture" "structure representing the text description
                       at runtime" blue
-            (a1) "Component" "Node with an id, title, description, shape, and
-                  color"
-            (a2) "Connector" "Connects two components, possibly has a label and
-                  color"
-            (a3) "Architecture" "Overarching object consisting of components and
+            (a1) "Architecture" "Overarching object consisting of components and
                   connectors"
+            (a2) "Component" "Node with an id, title, description, shape, and
+                  color"
+            (a3) "Connector" "Connects two components, possibly has a label and
+                  color"
 
-            a3 --"contains multiple"--> a1
-            a3 --"contains multiple"--> a2
+            a1 --"contains multiple"--> a2
+            a1 --"contains multiple"--> a3
+            a1 --"is used as source for"--> c3
         end
 
         // When no shape is given it will default to a rectangle.

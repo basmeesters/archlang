@@ -16,6 +16,10 @@ enum Color {
     Red,
 }
 
+type HashMap = {
+  [key: string]: string;
+}
+
 /**
   * Convenience method to create an actual color from a Color enum.
   */

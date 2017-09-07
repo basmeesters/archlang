@@ -19,7 +19,7 @@ class DagreGraph {
         };
         this.createGraphFromJson(jsonGraph);
         this.clusterManager = new ClusterManager(this.graph)
-        this.renderer = new Renderer(width, height, svgId);
+        this.renderer = new Renderer(width, height, svgId, this.graph);
         this.renderer.render(this.graph, this.update);
     }
 

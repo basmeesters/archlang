@@ -3,21 +3,26 @@
   * graph.
   */
 class Renderer {
+    private svg: any
     constructor(
         private width: number,
         private height: number,
-        private svgId: string
-    ) { }
+        private svgId: string,
+        initialGraph: any
+    ) {
+        this.svg = d3.select(`#${this.svgId}`)
+        const svgGroup = this.svg.append("g");
+        this.svg.attr('width', this.width);
+        this.svg.attr('height', this.height);
+
+        this.render(initialGraph, (a: any) => {})
+        this.setZoomBehavior(this.svg, initialGraph.graph())
+    }
 
     public render(graph: any, update: any) {
         let render = new dagreD3.render();
-        var svg = d3.select(`#${this.svgId}`),
-            svgGroup = svg.append("g");
-        svg.attr('width', this.width);
-        svg.attr('height', this.height);
         render(d3.select(`#${this.svgId} g`), graph);
-        this.setZoomBehavior(svg, graph.graph())
-        update(svg)
+        update(this.svg)
     }
 
     /**

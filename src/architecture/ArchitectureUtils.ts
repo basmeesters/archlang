@@ -1,9 +1,15 @@
 /**
   * Shape a Component can have
   */
-enum Shape {
+enum NodeShape {
     Ellipse,
     Rect
+}
+
+enum EdgeStyle {
+    Normal,
+    Fat,
+    Stroked
 }
 
 /**

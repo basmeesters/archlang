@@ -24,7 +24,7 @@ const architectureParserSpec = () => {
                 expect(a.components[0].id).toEqual("c1");
                 expect(a.components[0].title).toEqual("someTitle");
                 expect(a.components[0].description).toEqual("someDescription");
-                expect(a.components[0].shape).toEqual(Shape.Ellipse);
+                expect(a.components[0].shape).toEqual(NodeShape.Ellipse);
                 expect(a.components[0].color).toEqual(Color.Red);
             });
 
@@ -39,13 +39,13 @@ const architectureParserSpec = () => {
                 expect(a.components[0].id).toEqual("c1");
                 expect(a.components[0].title).toEqual("some title");
                 expect(a.components[0].description).toEqual("d e s c r iption");
-                expect(a.components[0].shape).toEqual(Shape.Ellipse);
+                expect(a.components[0].shape).toEqual(NodeShape.Ellipse);
                 expect(a.components[0].color).toEqual(Color.Gray);
 
                 expect(a.components[1].id).toEqual("c2");
                 expect(a.components[1].title).toEqual("title2");
                 expect(a.components[1].description).toEqual("");
-                expect(a.components[1].shape).toEqual(Shape.Rect);
+                expect(a.components[1].shape).toEqual(NodeShape.Rect);
                 expect(a.components[1].color).toEqual(Color.Gray);
             });
         });
@@ -119,7 +119,7 @@ const architectureParserSpec = () => {
                     end
                 `;
                 const a = createArch(desc);
-                expect(a.components[0].shape).toEqual(Shape.Ellipse);
+                expect(a.components[0].shape).toEqual(NodeShape.Ellipse);
                 expect(a.components[0].color).toEqual(Color.DarkGray);
 
                 const children = a.components[0].children;

@@ -8,7 +8,7 @@ class Component {
         public id: string,
         public title: string,
         public description: string,
-        public shape: Shape = Shape.Rect,
+        public shape: NodeShape = NodeShape.Rect,
         public color: Color = Color.Gray,
         public children?: Architecture
     ) { }
@@ -24,11 +24,11 @@ class Component {
         }
     }
 
-    private shapeToJson(shape: Shape): string {
+    private shapeToJson(shape: NodeShape): string {
         switch(shape) {
-            case Shape.Ellipse:
+            case NodeShape.Ellipse:
                 return "ellipse";
-            case Shape.Rect:
+            case NodeShape.Rect:
                 return "rect";
         }
     }

@@ -25,7 +25,7 @@ class ClusterManager {
         this.removeClusterEdges(outEdges);
     }
 
-    public collapse(nodeId: string) {
+    public collapse(nodeId: string): void {
         const node = this.graph.node(nodeId);
         const parentId = this.graph.parent(nodeId);
         const parent = this.graph.node(parentId);
@@ -116,10 +116,10 @@ class ClusterManager {
         for (const edgeId of edgeIds) {
             const edge = this.graph.edge(edgeId)
             const newEdge = this.copy(edge);
-            newEdge.source = edgeId.v
-            newEdge.target = newEdgeId
+            newEdge.jsonEdge.source = edgeId.v
+            newEdge.jsonEdge.target = newEdgeId
             this.graph.removeEdge(edgeId);
-            addEdge(newEdge)
+            addEdge(newEdge.jsonEdge)
         }
     }
 

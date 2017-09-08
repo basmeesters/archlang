@@ -72,7 +72,8 @@ class DagreGraph {
             label: edge.description,
             lineInterpolate: 'basis',
             style: edge.style,
-            arrowheadStyle: edge.arrowHeadStyle
+            arrowheadStyle: edge.arrowHeadStyle,
+            jsonEdge: edge
         }
         this.graph.setEdge(edge.source, edge.target, value, edge.id);
     }

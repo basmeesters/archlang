@@ -48,12 +48,26 @@ class ArchitectureParser {
     private static parseShapeAndParser(parser: Parser): Parser {
         return either([
             between(string("|"), parser, string("|")).map(l =>
-                [l.join(""), Shape.Rect]
+                [l.join(""), NodeShape.Rect]
             ),
             between(string("("), parser, string(")")).map(l =>
-                [l.join(""), Shape.Ellipse]
+                [l.join(""), NodeShape.Ellipse]
             ),
-            parser.map(l => [l.join(""), Shape.Rect])
+            parser.map(l => [l.join(""), NodeShape.Rect])
+        ])
+    }
+
+    private static parseStyleAndParser(parser: Parser): Parser {
+        return either([
+            between(string("=="), parser, string("==>")).map(l =>
+                [l, EdgeStyle.Fat]
+            ),
+            between(string("--"), parser, string("-->")).map(l =>
+                [l, EdgeStyle.Normal]
+            ),
+            between(string("-."), parser, string(".->")).map(l =>
+                [l, EdgeStyle.Stroked]
+            )
         ])
     }
 
@@ -101,11 +115,9 @@ class ArchitectureParser {
       * Example: --"some label"-->
       */
     private static parseArrow: Parser =
-        between(
-            string("--"),
-            ArchitectureParser.parseDescription,
-            string("-->")
-        )
+        ArchitectureParser.parseStyleAndParser(
+            ArchitectureParser.parseDescription
+        );
 
     /**
       * Example: n1 --"label"--> n2 red
@@ -121,10 +133,11 @@ class ArchitectureParser {
             string("\n")
         ]).map(list => {
             const source = list[0].join("")
-            const label = list[2].join("")
+            const label = list[2][0].join("")
+            const style = list[2][1]
             const target = list[4].join("")
             const color = list[5] ? list[5] : Color.DarkGray
-            return new Connector(source, target, label, color)
+            return new Connector(source, target, label, color, style)
         })
 
     private static parseConnectors: Parser =

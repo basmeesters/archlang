@@ -59,8 +59,10 @@ class Gui {
             if (errors.length > 0) {
                 errors.forEach(e => console.log(e))
             } else {
-                new DagreGraph(graph.toJson(), width, height, svgId);
-                new ImageExporter(svgId)
+                const dagreGraph = new DagreGraph(
+                    graph.toJson(), width, height, svgId
+                );
+                new ImageExporter(svgId, dagreGraph)
             }
         } else {
             console.log(result.value)

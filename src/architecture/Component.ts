@@ -8,28 +8,30 @@ class Component {
         public id: string,
         public title: string,
         public description: string,
-        public shape: NodeShape = NodeShape.Rect,
-        public color: Color = Color.Gray,
+        public shape: NodeShape,
+        public color: Color,
         public children?: Architecture
     ) { }
 
-    public toJson(): JsonNode {
+    public toJson(settings: Settings): JsonNode {
         return {
             id: this.id,
             title: this.title,
             description: this.description,
-            shape: this.shapeToJson(this.shape),
-            style: `fill: ${colorToJson(this.color)}`,
+            shape: this.shapeToJson(this.shape, settings),
+            style: `fill: ${settings.colorToJson(this.color, true)}`,
             children: this.children ? this.children.toJson() : undefined
         }
     }
 
-    private shapeToJson(shape: NodeShape): string {
+    private shapeToJson(shape: NodeShape, settings: Settings): string {
         switch(shape) {
             case NodeShape.Ellipse:
                 return "ellipse";
             case NodeShape.Rect:
                 return "rect";
+            case NodeShape.Default:
+                return this.shapeToJson(settings.defaultNodeShape, settings)
         }
     }
 }

@@ -53,7 +53,7 @@ class ArchitectureParser {
             between(string("("), parser, string(")")).map(l =>
                 [l.join(""), NodeShape.Ellipse]
             ),
-            parser.map(l => [l.join(""), NodeShape.Rect])
+            parser.map(l => [l.join(""), NodeShape.Default])
         ])
     }
 
@@ -104,7 +104,7 @@ class ArchitectureParser {
             const shape = list[0][1]
             const title = list[2].join("")
             const description = list[4].join("")
-            const color = list[5] ? list[5] : Color.Gray
+            const color = list[5] ? list[5] : Color.Default
             return new Component(id, title, description, shape, color)
         })
 
@@ -136,7 +136,7 @@ class ArchitectureParser {
             const label = list[2][0].join("")
             const style = list[2][1]
             const target = list[4].join("")
-            const color = list[5] ? list[5] : Color.DarkGray
+            const color = list[5] ? list[5] : Color.Default
             return new Connector(source, target, label, color, style)
         })
 
@@ -150,8 +150,8 @@ class ArchitectureParser {
       *  ...
       *  end
       */
-    private static parseCluster: Parser =
-        sequence([
+    private static parseCluster(settings: Settings): Parser {
+        return sequence([
             string("cluster "),
             ArchitectureParser.parseComponent,
             ignore,
@@ -160,31 +160,92 @@ class ArchitectureParser {
             string("end\n")
         ]).map(list => {
             const component = list[1]
-            const architecture = new Architecture(list[3], list[4])
+            const architecture =
+                new Architecture(settings, list[3], list[4])
 
             return new Component(component.id, component.title,
                 component.description, component.shape, component.color,
                 architecture)
         })
+    }
 
-    private static parseClusters: Parser =
-        zeroOrMoreAndIgnore(
+    private static parseClusters(settings: Settings): Parser {
+        return zeroOrMoreAndIgnore(
             either([
-                ArchitectureParser.parseCluster,
+                ArchitectureParser.parseCluster(settings),
                 ArchitectureParser.parseComponent
             ]),
             ignore
         )
+    }
+
+    private static parseKeyValue(key: string, value: Parser): Parser {
+        return sequence([
+            string(key),
+            string(":"),
+            value
+        ]).map(l => l[2])
+    }
+
+    private static parseShape: Parser =
+        sequence([
+            string(" "),
+            either([
+                string("rect").map(_l => NodeShape.Rect),
+                string("ellipse").map(_l => NodeShape.Ellipse)
+            ])
+        ]).map(l => l[1])
+
+
+    private static parseSettings: Parser =
+        sequence([
+            string("settings: "),
+            between(
+                string("{"),
+                sequence([
+                    ignore,
+                    maybe(ArchitectureParser.parseKeyValue("component-shape",
+                        ArchitectureParser.parseShape),
+                        Settings.DEFAULT_SHAPE),
+                    ignore,
+                    maybe(ArchitectureParser.parseKeyValue("component-color",
+                        ArchitectureParser.parseColor),
+                        Settings.DEFAULT_NODE_COLOR
+                    ),
+                    ignore,
+                    maybe(ArchitectureParser.parseKeyValue("edge-color",
+                        ArchitectureParser.parseColor),
+                        Settings.DEFAULT_EDGE_COLOR
+                    ),
+                    ignore
+                ]),
+                string("}")
+            )
+        ]).map(l => {
+            const shape = l[1][1]
+            const nodeColor = l[1][3]
+            const edgeColor = l[1][5]
+            return new Settings(shape, nodeColor, edgeColor)
+        })
+
 
     private static parseArchitecture: Parser =
         sequence([
             ignore,
-            ArchitectureParser.parseClusters,
-            ignore,
-            ArchitectureParser.parseConnectors
-        ]).map(list => {
-            const nodes = list[1]
-            const edges = list[3]
-            return new Architecture(nodes, edges)
+            maybe(ArchitectureParser.parseSettings).map(l => {
+                return l ? l : Settings.empty
+            })
+        ]).chain(l => {
+            const settings = l[1]
+            return sequence([
+                ignore,
+                ArchitectureParser.parseClusters(settings),
+                ignore,
+                ArchitectureParser.parseConnectors
+            ]).map(list => {
+                const nodes = list[1]
+                const edges = list[3]
+                return new Architecture(settings, nodes, edges)
+            })
         })
 }

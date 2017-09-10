@@ -6,7 +6,7 @@ declare let unescape: any
   * to download this PNG.
   */
 class ImageExporter {
-    constructor(private svgId: string) {
+    constructor(private svgId: string, private dagreGraph: DagreGraph) {
         this.setUpSaveButton()
     }
 
@@ -59,8 +59,8 @@ class ImageExporter {
         callback: any
     ): void {
 
-        const width = svg.getBBox().width;
-        const height = svg.getBBox().height;
+        const width = svg.getBBox().width; // this.dagreGraph.graph.graph().width
+        const height = svg.getBBox().height; // this.dagreGraph.graph.graph().height
 
         const format = "png";
         const imgsrc = 'data:image/svg+xml;base64,' +

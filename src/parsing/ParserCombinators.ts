@@ -94,12 +94,12 @@ const zeroOrMoreAndIgnore = (parser: Parser, ignore: Parser): Parser =>
         ignore
     ])).map((list) => list.map((l: any, i: number) => l[0]))
 
-const maybe = (parser: Parser): Parser =>
+const maybe = (parser: Parser, defaultValue?: any): Parser =>
     new Parser(strm =>
         parser.run(strm)
             .fold(
             (v, s) => new Success(v, s),
-            (v) => new Success(null, strm)))
+            (v) => new Success(defaultValue ? defaultValue : null, strm)))
 
 /**
   * Parse zero or more occurences of the same parser.

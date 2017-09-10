@@ -6,12 +6,12 @@ class Connector {
         public source: string,
         public target: string,
         public description: string,
-        public color: Color = Color.DarkGray,
-        public style: EdgeStyle = EdgeStyle.Normal
+        public color: Color,
+        public style: EdgeStyle
     ) { }
 
-    public toJson(id: string): JsonEdge {
-        const color = colorToJson(this.color);
+    public toJson(id: string, settings: Settings): JsonEdge {
+        const color = settings.colorToJson(this.color, false);
         const style = this.styleToJson(this.style);
         return {
             id: id,

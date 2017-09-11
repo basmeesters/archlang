@@ -13,7 +13,8 @@ class Architecture {
     public toJson(): JsonGraph {
         return {
             nodes: this.components.map (c => c.toJson(this.settings)),
-            edges: this.connectors.map((c, i) => c.toJson(`e${i}`, this.settings))
+            edges: this.connectors.map((c, i) => c.toJson(`e${i}`, this.settings)),
+            mode: this.settings.visualizatonMode
         }
     }
 

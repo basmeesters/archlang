@@ -196,6 +196,14 @@ class ArchitectureParser {
             ])
         ]).map(l => l[1])
 
+    private static parseMode: Parser =
+        sequence([
+            string(" "),
+            either([
+                string("static").map(l => VisualizationMode.Static),
+                string("expanded").map(l => VisualizationMode.Expanded)
+            ])
+        ]).map(l => l[1])
 
     private static parseSettings: Parser =
         sequence([
@@ -217,7 +225,12 @@ class ArchitectureParser {
                         ArchitectureParser.parseColor),
                         Settings.DEFAULT_EDGE_COLOR
                     ),
-                    ignore
+                    ignore,
+                    maybe(ArchitectureParser.parseKeyValue("mode",
+                        ArchitectureParser.parseMode),
+                        Settings.DEFAULT_MODE
+                    ),
+                    ignore,
                 ]),
                 string("}")
             )
@@ -225,7 +238,9 @@ class ArchitectureParser {
             const shape = l[1][1]
             const nodeColor = l[1][3]
             const edgeColor = l[1][5]
-            return new Settings(shape, nodeColor, edgeColor)
+            const mode = l[1][7]
+
+            return new Settings(shape, nodeColor, edgeColor, mode)
         })
 
 

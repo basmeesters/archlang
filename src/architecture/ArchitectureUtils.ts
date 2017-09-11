@@ -13,6 +13,12 @@ enum EdgeStyle {
     Stroked
 }
 
+enum VisualizationMode {
+    Dynamic,
+    Static,
+    Expanded
+}
+
 /**
   * Color that a Component and a Connector can have.
   */

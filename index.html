@@ -48,7 +48,9 @@
             component-shape: ellipse
             component-color: gray
             edge-color: dark-grey
+            mode: static
         }
+
         // You can create a clusters with a shape, id, title, and description
         // This will create a blue rectangle.
         cluster |c1| "Parsing" "everything needed to parse a description" blue
@@ -93,8 +95,8 @@
         end
 
         // When no shape is given it will default to a rectangle.
-        cluster c3 "Visualization" "visualizes the runtime architecture using
-                    Dagre-d3" blue
+        cluster |c3| "Visualization" "visualizes the runtime architecture using
+                      Dagre-d3" blue
             v1 "DagreGraph" "wrapper around dagre-d3 functionality"
             v2 "ClusterManager" "manages expanding and collapsing of
                   components with sub-architectures"

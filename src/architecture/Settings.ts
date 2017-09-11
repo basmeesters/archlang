@@ -2,17 +2,20 @@ class Settings {
     public static DEFAULT_SHAPE = NodeShape.Rect
     public static DEFAULT_NODE_COLOR = Color.Gray
     public static DEFAULT_EDGE_COLOR = Color.DarkGray
+    public static DEFAULT_MODE = VisualizationMode.Dynamic
 
     constructor(
         public defaultNodeShape: NodeShape,
         public defaultNodeColor: Color,
-        public defaultEdgeColor: Color
+        public defaultEdgeColor: Color,
+        public visualizatonMode: VisualizationMode
     ) { }
 
     public static empty = new Settings(
         Settings.DEFAULT_SHAPE,
         Settings.DEFAULT_NODE_COLOR,
-        Settings.DEFAULT_EDGE_COLOR
+        Settings.DEFAULT_EDGE_COLOR,
+        Settings.DEFAULT_MODE
     )
 
     /**

@@ -3,7 +3,8 @@
   */
 type JsonGraph = {
     nodes: Array<JsonNode>,
-    edges: Array<JsonEdge>
+    edges: Array<JsonEdge>,
+    mode: number
 }
 
 type JsonNode = {

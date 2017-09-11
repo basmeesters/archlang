@@ -3,6 +3,7 @@ class DagreGraph {
     private MAX_LENGHT = 35;
     private renderer: Renderer
     private clusterManager: ClusterManager;
+    private readonly visualizationMode: VisualizationMode
 
     constructor(
         jsonGraph: JsonGraph,
@@ -17,8 +18,10 @@ class DagreGraph {
         this.graph.graph().transition = (selection: any) => {
             return selection.transition().duration(500);
         };
+        this.visualizationMode = jsonGraph.mode
         this.createGraphFromJson(jsonGraph);
         this.clusterManager = new ClusterManager(this.graph)
+        this.expandGraph(jsonGraph)
         this.renderer = new Renderer(width, height, svgId, this.graph);
         this.renderer.render(this.graph, this.update);
     }
@@ -31,6 +34,20 @@ class DagreGraph {
 
         for (let edge of jsonGraph.edges) {
             this.addEdge(edge);
+        }
+    }
+
+    private expandGraph(jsonGraph: JsonGraph) {
+        const expand = jsonGraph.mode == VisualizationMode.Static ||
+            jsonGraph.mode == VisualizationMode.Expanded
+        if (expand) {
+            for(let nodeId of this.graph.nodes()) {
+                const node = this.graph.node(nodeId)
+                if (node.children) {
+                    this.clusterManager.expand(nodeId, this.addNode,
+                        this.addEdge)
+                }
+            }
         }
     }
 
@@ -79,23 +96,25 @@ class DagreGraph {
     }
 
     private update = (svg: any) => {
-        svg.selectAll(`#${this.svgId} g.node`)
-            .on('click', (nodeId: string) => {
+        if (!(this.visualizationMode == VisualizationMode.Static)) {
+            svg.selectAll(`#${this.svgId} g.node`)
+                .on('click', (nodeId: string) => {
 
-                // a bit dirty, but check if a node has children OR is is
-                // expanded
-                if (this.graph.node(nodeId).children ||
-                    this.graph.node(nodeId).collapsible) {
-                    if (!this.graph.node(nodeId).collapsible)
-                        this.clusterManager.expand(nodeId, this.addNode,
-                            this.addEdge)
-                    else
-                        this.clusterManager.collapse(nodeId);
-                    this.renderer.render(this.graph, this.update);
-                }
-                else {
-                    console.log('no children');
-                }
-            });
+                    // a bit dirty, but check if a node has children OR is is
+                    // expanded
+                    if (this.graph.node(nodeId).children ||
+                        this.graph.node(nodeId).collapsible) {
+                        if (!this.graph.node(nodeId).collapsible)
+                            this.clusterManager.expand(nodeId, this.addNode,
+                                this.addEdge)
+                        else
+                            this.clusterManager.collapse(nodeId);
+                        this.renderer.render(this.graph, this.update);
+                    }
+                    else {
+                        console.log('no children');
+                    }
+                });
+        }
     }
 }
